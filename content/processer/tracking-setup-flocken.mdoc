@@ -1,0 +1,61 @@
+---
+titel: Tracking-setup för Flocken
+sammanfattning: >-
+  Strukturerad approach för att sätta upp GA4, GTM och BigQuery från dag ett.
+  Eventstruktur designad med AI-stöd.
+kluster: tracking-data-analys
+status: aktiv
+skapad: 2026-01-15
+uppdaterad: 2026-02-03
+---
+
+## Syfte & avgränsning
+
+Målet var att från start ha en mätningsstruktur som möjliggör datadriven optimering av marknadsföringen. Avgränsningen är att fokusera på events som direkt påverkar affärsbeslut, inte att mäta allt som går att mäta.
+
+## AI-first angreppssätt
+
+Istället för att börja med att googla "GA4 best practices" startade jag med en dialog med Claude för att designa eventstrukturen. AI:n hjälpte mig resonera kring:
+
+- Vilka events som faktiskt behövs för att svara på affärsfrågor
+- Namnkonventioner som är konsekventa och framtidssäkra
+- Hur data ska struktureras för att fungera i BigQuery
+
+## Verktyg & system
+
+- **GA4** – Web property med enhanced measurement
+- **GTM** – Server-side tagging via gtm.nastahem.com
+- **BigQuery** – Export för djupare analys
+- **Claude** – Eventstruktur och validering
+
+## Resultat / nuläge
+
+Implementerad och live. Eventdata flödar korrekt till BigQuery och kan användas för analys.
+
+## Lärdomar
+
+- Att designa eventstrukturen med AI sparade tid och gav bättre resultat än att börja från scratch
+- Server-side tagging är mer komplext att sätta upp men ger bättre datakvalitet
+- Dokumentera namnkonventioner tidigt – det är smärtsamt att ändra senare
+
+## Fortsättning
+
+**Status: Aktiv**
+
+Nästa steg är att bygga automatiserade rapporter i BigQuery och koppla till dashboards för ongoing monitoring.
+
+---
+
+## Uppdateringar
+
+### 2026-02-03
+
+Lade till consent-hantering efter GDPR-genomgång. Implementerade consent mode v2 i GTM.
+
+### 2026-01-20
+
+Första implementation klar. Alla core events triggar korrekt.
+
+### 2026-01-15
+
+Startade processen. Designade eventstruktur tillsammans med Claude.

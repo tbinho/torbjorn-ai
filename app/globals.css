@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   TORBJORN-AI DESIGN SYSTEM
+   Modern, professionell, mänsklig
+   ======================================== */
+
+/* Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* JetBrains Mono för kod */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ----------------------------------------
+   BASE STYLES
+   ---------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-base text-text font-sans antialiased;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* ----------------------------------------
+   TYPOGRAPHY
+   ---------------------------------------- */
+
+h1, h2, h3 {
+  @apply font-display;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  @apply text-4xl md:text-5xl text-text;
+}
+
+h2 {
+  @apply text-2xl md:text-3xl text-text;
+}
+
+h3 {
+  @apply text-xl md:text-2xl text-text;
+}
+
+p {
+  @apply text-base leading-relaxed;
+}
+
+/* ----------------------------------------
+   LINKS & INTERACTIONS
+   ---------------------------------------- */
+
+a {
+  @apply text-accent transition-colors duration-200;
+}
+
+a:hover {
+  @apply text-accent-hover;
+}
+
+/* Subtil underline för textlänkar */
+.prose a {
+  @apply underline decoration-accent/30 underline-offset-2;
+}
+
+.prose a:hover {
+  @apply decoration-accent;
+}
+
+/* ----------------------------------------
+   CONTENT PROSE
+   ---------------------------------------- */
+
+.prose {
+  @apply max-w-content;
+}
+
+.prose p {
+  @apply mb-6;
+}
+
+.prose h2 {
+  @apply mt-12 mb-4 pt-8 border-t border-border;
+}
+
+.prose h3 {
+  @apply mt-8 mb-3;
+}
+
+.prose ul, .prose ol {
+  @apply mb-6 pl-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose ul li {
+  @apply list-disc;
+}
+
+.prose ol li {
+  @apply list-decimal;
+}
+
+.prose blockquote {
+  @apply pl-6 border-l-2 border-accent/30 italic text-text-muted my-6;
+}
+
+.prose code {
+  @apply font-mono text-sm bg-base-subtle px-1.5 py-0.5 rounded;
+}
+
+.prose pre {
+  @apply font-mono text-sm bg-base-subtle p-4 rounded-lg overflow-x-auto my-6;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+/* ----------------------------------------
+   COMPONENTS
+   ---------------------------------------- */
+
+/* Process-kort */
+.process-card {
+  @apply p-6 bg-white border border-border rounded-lg;
+  @apply transition-all duration-200;
+}
+
+.process-card:hover {
+  @apply border-border-strong shadow-sm;
+}
+
+/* Status-badges */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.status-badge--aktiv {
+  @apply bg-accent-subtle text-accent;
+}
+
+.status-badge--parkerad {
+  @apply bg-secondary-subtle text-secondary;
+}
+
+.status-badge--avslutad {
+  @apply bg-base-subtle text-text-muted;
+}
+
+/* Kluster-tags */
+.kluster-tag {
+  @apply text-xs uppercase tracking-wide text-text-muted;
+}
+
+/* ----------------------------------------
+   LAYOUT UTILITIES
+   ---------------------------------------- */
+
+.container-narrow {
+  @apply max-w-content mx-auto px-6;
+}
+
+.container-wide {
+  @apply max-w-wide mx-auto px-6;
+}
+
+/* ----------------------------------------
+   ANIMATIONS
+   ---------------------------------------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* ----------------------------------------
+   SELECTION
+   ---------------------------------------- */
+
+::selection {
+  @apply bg-accent/20 text-text;
+}
