@@ -48,7 +48,7 @@ h3 {
 }
 
 p {
-  @apply text-base leading-relaxed;
+  @apply text-base leading-relaxed text-text;
 }
 
 /* ----------------------------------------
@@ -77,7 +77,7 @@ a:hover {
    ---------------------------------------- */
 
 .prose {
-  @apply max-w-content;
+  @apply max-w-content text-text;
 }
 
 .prose p {

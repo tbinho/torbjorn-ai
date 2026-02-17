@@ -1,32 +1,8 @@
 import Link from 'next/link'
+import { createReader } from '@keystatic/core/reader'
+import keystaticConfig from '@/keystatic.config'
 
-// Temporär data - ersätts med Keystatic
-const mockProcesser = [
-  {
-    slug: 'tracking-setup-flocken',
-    titel: 'Tracking-setup för Flocken',
-    sammanfattning: 'Strukturerad approach för att sätta upp GA4, GTM och BigQuery från dag ett. Eventstruktur designad med AI-stöd.',
-    kluster: 'tracking-data-analys',
-    status: 'aktiv',
-    uppdaterad: '2026-02-03',
-  },
-  {
-    slug: 'content-pipeline-meta-ads',
-    titel: 'Content pipeline för Meta Ads',
-    sammanfattning: 'Hur jag använder AI för att skapa, testa och iterera på annonsinnehåll i snabb takt.',
-    kluster: 'content-kreativ-produktion',
-    status: 'aktiv',
-    uppdaterad: '2026-01-28',
-  },
-  {
-    slug: 'automated-growth-loop',
-    titel: 'Automated Growth Loop',
-    sammanfattning: 'Vision och implementation av ett system som automatiskt analyserar, skapar och optimerar marknadsföring.',
-    kluster: 'automation-arbetsfloden',
-    status: 'parkerad',
-    uppdaterad: '2026-01-15',
-  },
-]
+const reader = createReader('', keystaticConfig)
 
 const klusterNamn: Record<string, string> = {
   'tracking-data-analys': 'Tracking, data & analys',
@@ -36,7 +12,24 @@ const klusterNamn: Record<string, string> = {
   'foretagsbyggande-ai': 'Företagsbyggande med AI',
 }
 
-export default function ArbetePage() {
+export default async function ArbetePage() {
+  // Läs alla processer från Keystatic
+  const processSlugs = await reader.collections.processer.list()
+  const processer = await Promise.all(
+    processSlugs.map(async (slug) => {
+      const process = await reader.collections.processer.read(slug)
+      return {
+        slug,
+        ...process,
+      }
+    })
+  )
+
+  // Sortera efter uppdaterad datum (nyast först)
+  const sortedProcesser = processer.sort((a, b) => {
+    if (!a || !b) return 0
+    return new Date(b.uppdaterad).getTime() - new Date(a.uppdaterad).getTime()
+  })
   return (
     <div className="container-wide py-16 md:py-24">
       {/* Header */}
@@ -65,8 +58,8 @@ export default function ArbetePage() {
 
       {/* Process-grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {mockProcesser.map((process) => (
-          <ProcessCard key={process.slug} {...process} />
+        {sortedProcesser.map((process) => (
+          process && <ProcessCard key={process.slug} {...process} />
         ))}
       </div>
 

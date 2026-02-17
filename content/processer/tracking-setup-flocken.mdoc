@@ -1,52 +1,88 @@
 ---
 titel: Tracking-setup för Flocken
 sammanfattning: >-
-  Strukturerad approach för att sätta upp GA4, GTM och BigQuery från dag ett.
-  Eventstruktur designad med AI-stöd.
+  Hur jag designade en tracking-infrastruktur från grunden med AI som
+  arkitekt – från eventstruktur till BigQuery, med fokus på vad som faktiskt
+  driver affärsbeslut.
 kluster: tracking-data-analys
 status: aktiv
 skapad: 2026-01-15
-uppdaterad: 2026-02-03
+uppdaterad: 2026-02-17
 ---
 
 ## Syfte & avgränsning
 
-Målet var att från start ha en mätningsstruktur som möjliggör datadriven optimering av marknadsföringen. Avgränsningen är att fokusera på events som direkt påverkar affärsbeslut, inte att mäta allt som går att mäta.
+När Flocken skulle få tracking hade jag ett val: antingen följa Googles standardguide och "mäta allt som går att mäta", eller börja med affärsfrågorna och designa bakåt. Jag valde det senare.
+
+Målet var att ha data som faktiskt svarar på affärsfrågor, inte bara "rätt setup". Jag ville möjliggöra datadriven marknadsoptimering från dag ett, och bygga en grund som funkar cross-platform när iOS- och Android-apparna kommer.
+
+Avgränsningen blev tydlig: endast events som direkt påverkar beslut eller budget. Ingen "vanity metrics" – bara det som driver action.
 
 ## AI-first angreppssätt
 
-Istället för att börja med att googla "GA4 best practices" startade jag med en dialog med Claude för att designa eventstrukturen. AI:n hjälpte mig resonera kring:
+Istället för att googla "GA4 best practices" började jag med att beskriva Flockens affärsmodell för Claude och fråga: "Vilka frågor behöver jag kunna svara på med data?"
 
-- Vilka events som faktiskt behövs för att svara på affärsfrågor
-- Namnkonventioner som är konsekventa och framtidssäkra
-- Hur data ska struktureras för att fungera i BigQuery
+Det blev starten på en design-dialog som sparade mig veckor av trial-and-error. Claude hjälpte mig resonera kring vilka events som faktiskt behövs – inte vilka som är "standard". Vi diskuterade namnkonventioner som skulle hålla även när produkten växer, och hur data skulle struktureras för att fungera i BigQuery senare.
+
+**Konkret exempel:** När vi diskuterade eventnamn föreslog jag först `user_signup`, `listing_add`, `premium_buy`. Claude påpekade att detta skapar inkonsekvent mönster. Vi landade i `[action]_[object]`: `sign_up`, `listing_created`, `subscription_start`. Enkelt, men hade varit smärtsamt att ändra senare.
+
+Den stora skillnaden mot traditionell approach var timingen. Istället för "följ setupguiden, installera allt, fixa senare" designade vi strukturen först och implementerade sen. Det gav en infrastruktur som redan från start är byggd för de frågor vi behöver svara på.
 
 ## Verktyg & system
 
-- **GA4** – Web property med enhanced measurement
-- **GTM** – Server-side tagging via gtm.nastahem.com
-- **BigQuery** – Export för djupare analys
-- **Claude** – Eventstruktur och validering
+Tracking-stacken består av flera lager som jobbar tillsammans. GA4 tar emot events från webben och kommer ta emot från iOS/Android när apparna lanseras. GTM Web Container agerar som mellanhand och routar trafik baserat på hostname – samma container för både Flocken och Nästa Hem, men data hålls separerad.
+
+Server-side tagging via GTM Server Container var krångligare att sätta upp än jag trodde, men ger bättre datakvalitet och färre problem med ad blockers. Allt exporteras dagligen till BigQuery där vi kan göra djupare analys.
+
+AI-verktyget blev inte bara ett hjälpmedel utan en designpartner. Conversation-driven architecture betyder att jag beskriver problem och får strukturerad lösning tillbaka, istället för att leta efter rätt bloggpost.
+
+**Nyckelbeslut vi tog tidigt:**
+
+EN GA4 property per produkt istället för separata för web och app. Detta betyder att vi kan se användarresor från web till app i samma dashboard. Separation sker ändå via platform-field i BigQuery när det behövs.
+
+Delat GTM-container mellan produkter med hostname-routing. Kändes scary först men sparar massivt med underhåll. Server-side tagging från start för bättre datakvalitet. EU-hosting för BigQuery så vi är GDPR-compliant från dag ett.
 
 ## Resultat / nuläge
 
-Implementerad och live. Eventdata flödar korrekt till BigQuery och kan användas för analys.
+Setupen är live och fungerar. GA4 tar emot events från production, enhanced measurement är aktiv och trackar scroll, video och downloads automatiskt. Consent mode v2 är implementerad och GDPR-compliant. Data exporteras dagligen till BigQuery.
+
+Men det intressanta är inte vad som är klart, utan vad som nu är möjligt. Vi kan tracka användarresa från web till app install till subscription. Vi kan separera iOS från Android performance i samma dashboard. Vi kan jämföra Flocken mot Nästa Hem i samma BigQuery-projekt men med separata datasets.
+
+Custom events är planerade men inte live än. När de kommer ska vi kunna mäta sign_up, listing_created, app_install och subscription_start. BigQuery-strukturen är skapad med tre lager – raw, curated och marts – men bara raw används just nu.
 
 ## Lärdomar
 
-- Att designa eventstrukturen med AI sparade tid och gav bättre resultat än att börja från scratch
-- Server-side tagging är mer komplext att sätta upp men ger bättre datakvalitet
-- Dokumentera namnkonventioner tidigt – det är smärtsamt att ändra senare
+AI som arkitekt funkar, men kräver rätt input. Att beskriva affärsmodellen och frågorna jag ville svara på gav mycket bättre struktur än att fråga "hur sätter jag upp GA4?". Det tvingade mig att tänka backwards from decisions istället för forwards from tools.
+
+Delad infrastruktur var rätt beslut. Ett GTM-container för alla produkter kändes läskigt först – risk för cross-contamination – men hostname-routing löste det elegant. Mycket mindre att underhålla, färre containers att versionshantera.
+
+Server-side tagging tog längre tid än väntat. Custom domain, server container, routing – allt var mer komplext. Men det gav bättre datakvalitet, färre ad blockers blockerar det, och first-party cookies håller längre sessions.
+
+**Det viktiga med naming conventions:** Jag gjorde detta från start med AI:s hjälp och sparade massiv tid. Formatet `[action]_[object]` dokumenterades innan första eventet skickades. Att ändra event names i efterhand påverkar historisk data och dashboards – inte kul.
+
+EN property för alla plattformar visade sig smart. Web, iOS och Android i samma GA4 property betyder cross-platform user journeys i samma dashboard och enklare attribution när användare startar på web och installerar app. Separation sker via platform-field i BigQuery när det behövs.
+
+GDPR från start är billigare än GDPR i efterhand. Consent mode v2, EU-hosting, cookie banner – allt implementerat från dag ett. Detta hade varit mycket jobbigare att retrofita senare.
 
 ## Fortsättning
 
-**Status: Aktiv**
+Närmaste veckan implementerar vi custom events – sign_up, listing_created, app_install. De ska verifieras i GTM preview mode innan de går live.
 
-Nästa steg är att bygga automatiserade rapporter i BigQuery och koppla till dashboards för ongoing monitoring.
+När custom events är live bygger vi curated layer i BigQuery med SQL transformations. Det betyder standardiserad event naming, parameter struktur och user identity map för cross-platform stitching.
+
+Därefter kommer marts layer med aggregerade tables för daily och weekly performance, Looker Studio dashboard för marketing team, och automated reporting varje måndag morgon.
+
+Längre fram när iOS/Android-apparna är i produktion lägger vi till data streams för dem. Då blir cross-platform tracking verklighet – vi kan se hela resan från web till app.
+
+Långsiktig vision är real-time dashboards som visar web-till-app conversion, automated anomaly detection med BigQuery och Cloud Functions, och attribution modeling för Meta Ads till App Install flows.
 
 ---
 
 ## Uppdateringar
+
+### 2026-02-17
+
+Skrev om hela dokumentet med fokus på läsbarhet och mänsklig ton. Struktur baserad på balans mellan löptext och punktlistor, korta stycken för mobilläsning.
 
 ### 2026-02-03
 
@@ -54,8 +90,8 @@ Lade till consent-hantering efter GDPR-genomgång. Implementerade consent mode v
 
 ### 2026-01-20
 
-Första implementation klar. Alla core events triggar korrekt.
+Första implementation klar. Alla core events (enhanced measurement) triggar korrekt. Verifierat i GTM preview mode och GA4 Realtime.
 
 ### 2026-01-15
 
-Startade processen. Designade eventstruktur tillsammans med Claude.
+Startade processen. Designade eventstruktur och BigQuery-arkitektur tillsammans med Claude. Beslutade om shared GTM container med hostname routing.
