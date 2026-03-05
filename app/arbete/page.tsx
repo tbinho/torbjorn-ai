@@ -76,18 +76,18 @@ export default async function ArbetePage() {
 
 function ProcessCard({
   slug,
-  titel,
-  sammanfattning,
-  kluster,
-  status,
-  uppdaterad,
+  titel = '',
+  sammanfattning = '',
+  kluster = '',
+  status = '',
+  uppdaterad = '',
 }: {
   slug: string
-  titel: string
-  sammanfattning: string
-  kluster: string
-  status: string
-  uppdaterad: string
+  titel?: string
+  sammanfattning?: string
+  kluster?: string
+  status?: string
+  uppdaterad?: string
 }) {
   return (
     <article className="process-card group">
