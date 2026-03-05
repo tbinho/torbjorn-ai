@@ -59,7 +59,15 @@ export default async function ArbetePage() {
       {/* Process-grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {sortedProcesser.map((process) => (
-          process && <ProcessCard key={process.slug} {...process} />
+          process && <ProcessCard
+            key={process.slug}
+            slug={process.slug}
+            titel={process.titel ?? undefined}
+            sammanfattning={process.sammanfattning ?? undefined}
+            kluster={process.kluster ?? undefined}
+            status={process.status ?? undefined}
+            uppdaterad={process.uppdaterad ?? undefined}
+          />
         ))}
       </div>
 
