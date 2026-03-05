@@ -24,5 +24,12 @@
   "DNS": "Domain Name System – systemet som kopplar domännamn till servrar, e-postinställningar och säkerhetsposter",
   "envLocal": ".env.local – lokal konfigurationsfil för hemliga nycklar och miljövariabler som aldrig committas till git",
   "webhook": "Automatisk HTTP-notis som skickas från en tjänst till din server när en händelse inträffar",
-  "BigQuery": "Googles molnbaserade datalager för analys av stora datamängder"
+  "BigQuery": "Googles molnbaserade datalager för analys av stora datamängder",
+  "Firebase": "Googles plattform för app-utveckling. Firebase Analytics kopplar iOS och Android till GA4 och skickar events i samma tracking-pipeline som webb.",
+  "VSCode": "Visual Studio Code – Microsofts populära kodeditor",
+  "IDE": "Integrated Development Environment – program för att skriva, testa och debugga kod",
+  "Cursor": "AI-drivet kodverktyg byggt på VS Code där AI-agenten kan läsa, skriva och köra kod direkt i projektet",
+  "GA4": "Google Analytics 4 – Googles analysplattform för att mäta besökarbeteende på webb och i appar",
+  "serverSideTagging": "Server-side tagging – tracking som körs på servern istället för i webbläsaren, ger bättre datakvalitet och färre problem med ad blockers",
+  "LookerStudio": "Looker Studio – Googles gratisverktyg för att bygga interaktiva rapporter och dashboards från BigQuery och GA4"
 }
