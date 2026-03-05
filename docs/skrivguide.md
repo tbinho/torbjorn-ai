@@ -68,7 +68,9 @@ Fråga innan du skriver: vad ska läsaren ha med sig när de lägger ner texten?
 
 **Avsluta varje avsnitt med en mening som spetsar eller öppnar** – inte en som sammanfattar det du precis sagt. Sammanfattningar dödar tempo.
 
-**Stryk inte utan att veta var poängen hamnar.** Innan ett stycke tas bort, fråga: vad försvinner härifrån och dyker det upp någon annanstans i texten? Om svaret är nej, skriv om istället för att stryka.
+**Placering av framtidsrutan** beror på vad den handlar om. Handlar den om en förutsättning som saknas för att komma vidare hör den hemma i "Resultat och lärdomar". Handlar den om en framtida vision för hela processen kan den placeras i "Hur vi tänkte" eller som avslut på det avsnittet.
+
+**Bemöt invändningar tidigt.** Om läsaren sannolikt har en invändning mot premissen, till exempel att epostlistor är förlegade eller att en approach verkar onödigt komplex, bemöt den direkt i "Vad vi ville uppnå". Det bygger förtroende och håller läsaren kvar.
 
 Strukturen är obligatorisk som riktning – inte som checklista. Varje artikel behöver ett tydligt syfte och ett tydligt värde för läsaren. Resten är ett stöd, inte ett tvång.
 
@@ -113,6 +115,8 @@ Artiklar skrivs om när projektet rör sig. Ingen ändringslogg under texten. Om
 
 Om ett verktyg bytts ut, ett beslut omprövats eller ett resultat förändrats – det hör hemma i brödtexten, inte i en tidsstämplad not.
 
+---
+
 ## Komponenten "Nästa tröskel"
 
 Många processer befinner sig i ett medvetet vänteläge. Inte för att vi inte kan gå vidare, utan för att förutsättningarna inte är rätt ännu, volymen inte motiverar tiden, eller för att ett verktyg eller en funktion saknas men är på väg.
@@ -129,6 +133,8 @@ Komponenten läggs in som ett eget block i artikeln, vanligtvis i slutet av "Res
 
 **Design:**
 Subtil bakgrundsfärg i ton med accent `#3D6B5C`, tunn kantlinje, lite extra padding. Ska sticka ut för skumläsaren utan att dominera sidan.
+
+**Framtidsrutor ska uppdateras när de inte längre stämmer.** När något som beskrivits som "nästa tröskel" faktiskt implementerats tas rutan bort och innehållet skrivs in i brödtexten som ett faktum. En inaktuell framtidsruta är värre än ingen alls.
 
 **Syntax i mdoc:**
 ```
