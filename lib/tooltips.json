@@ -12,5 +12,7 @@
   "ConsentMode": "Consent Mode v2 – Googles ramverk som låter tracking-verktyg respektera cookie-val utan att stoppa datainsamlingen helt",
   "MetaPixel": "Meta Pixel – Facebooks spårningskod som mäter besökarnas beteende på webbplatsen",
   "referenceImages": "Referensbilder som AI:n använder för att matcha stil eller identitet i nya generationer",
-  "bottomSheet": "Mobilmönster där ett panel glider upp från skärmens nederkant"
+  "bottomSheet": "Mobilmönster där ett panel glider upp från skärmens nederkant",
+  "Imagen": "Imagen 3 – Googles text-to-image-modell för fotorealistisk AI-bildgenerering",
+  "AIStudio": "Google AI Studio – Googles webbgränssnitt för att arbeta med Gemini och andra AI-modeller utan kod"
 }

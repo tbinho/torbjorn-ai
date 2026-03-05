@@ -1,75 +1,90 @@
 ---
-titel: "Samma hund, varje gång – hur vi löste bildkonsistens med AI"
+titel: "AI-genererade bilder med konsekvent identitet – bara prompter räckte inte"
 sammanfattning: >-
-  Vad som händer när textprompter inte räcker, och hur tre pivotar ledde
-  fram till en lösning på problemet med konsekvent AI-genererade hundbilder.
+  Att generera en hund är enkelt. Att generera samma hund tre gånger med
+  konsekvent päls, proportioner och färg visade sig betydligt svårare – och
+  lärde oss något viktigt om gränsen mellan gränssnitt och API.
 kluster: content-kreativ-produktion
 status: parkerad
 skapad: 2026-02-19
-uppdaterad: 2026-02-19
+uppdaterad: 2026-02-20
 ---
 
-En produktbild på en hund är enkel att ta. Men ett bildbibliotek där samma hund ser konsekvent ut i tre olika poser, med samma päls, samma proportioner och samma studiobakgrund – det är något annat. Det är det vi behövde, och det visade sig att AI inte klarade av det på det sätt vi trodde.
+Att generera en hund är enkelt. Att generera samma hund tre gånger med konsekvent päls, proportioner och färg visade sig betydligt svårare. Det lärde oss också något om gränsen mellan vad som finns i ett gränssnitt och vad som faktiskt går att automatisera via API*(tooltip)*. Så här löste vi det.
 
-Det intressanta är inte att det misslyckades. Det är vad vi lärde oss om hur AI-bildgenerering faktiskt fungerar, och var gränserna går mellan vad som är möjligt i ett användargränssnitt och vad som är tillgängligt via API*(tooltip)*.
+---
 
 ## Vad vi ville uppnå
 
-Flocken-appen visar hundannonser med återkommande hundkaraktärer. För att skapa en professionell och konsekvent upplevelse behövde varje hund tre referensbilder: profil, trekvartsvinkel och liggande. Vit studiobakgrund, neutralt ljus, full kropp synlig.
+Flocken-appen visar hundannonser med fasta hundkaraktärer som återkommer i marknadsföringsmaterial. För att hålla en professionell och konsekvent upplevelse behövde varje hund ett eget bildbibliotek.
+
+Vi ville ta fram tre bilder per hund: profil, trekvartsvinkel och liggande. Vit studiobakgrund, neutralt ljus, full kropp synlig.
 
 Kravet på konsistens var det avgörande. Det räcker inte med en bra bild. Hunden måste se ut som samma individ i alla tre poserna, med samma pälsstruktur, samma proportioner och samma färgnyans. Annars bryter det illusionen.
 
-Målet var att automatisera genereringen via API så att vi enkelt kunde lägga till nya hundar i framtiden utan manuellt fotoarbete.
+Målet var att automatisera genereringen via API*(tooltip)* så att vi enkelt kunde lägga till nya hundar i framtiden utan manuellt fotoarbete.
+
+---
 
 ## Hur vi tänkte
 
-Hypotesen var enkel: extremt detaljerade prompter plus konsekvent parametrisering borde räcka. Vi började med Vertex AI*(tooltip: VertexAI)* och modellen `imagen-3.0-generate-001`.
+Hypotesen var enkel. Extremt detaljerade prompter med konsekvent struktur borde räcka för att få samma hund att se likadan ut i varje pose. Vi började med Vertex AI*(tooltip: VertexAI)* och modellen `imagen-3.0-generate-001`.
 
-ChatGPT användes för att bygga upp promptstrukturen. Vi specificerade ras, vikt, höjd, pälsfärg i RGB-värden, bakgrundsfärg (RGB 255,255,255), ljussättning och kameravinkel. Allt i ett standardiserat format som vi körde för varje pose.
+ChatGPT hjälpte oss bygga upp promptstrukturen. Vi specificerade ras, proportioner, pälsfärg, ljussättning och kameravinkel i ett standardiserat format och körde samma mall för varje pose. Cursor tog hand om API-anropen och organiserade scripts så att en komplett hundprofil skulle kunna genereras med ett enda kommando.
 
-```text
-Photorealistic studio image of a red/apricot toy poodle, 26-27 cm tall,
-3.5 kg, white background RGB 255,255,255, soft studio lighting, no shadows,
-profile view, neutral expression, full body visible.
-```
+Det kändes som ett vattentätt upplägg.
 
-Cursor strukturerade API-anropen och organiserade scripts. Tanken var att en komplett hundprofil skulle kunna genereras med ett enda kommando.
+---
 
-## Vad som hände – tre pivotar
+## Vad som hände – tre omtag
 
-**Pivot 1: Detaljerade prompter löser inte identitetsproblem.**
+**Omtag 1: Detaljerade prompter löser inte identitetsproblem.**
 
-Redan vid första testsessionen var problemet tydligt. Imagen 3 genererade visuellt fina hundar, men inte samma hund. Päls-strukturen varierade, proportionerna skiftade och färgnyansen ändrades mellan generationer. Det spelade ingen roll hur exakt prompten var – modellen hade inget minne av den individ vi försökte reproducera.
+Redan vid första testsessionen var problemet tydligt. Imagen*(tooltip)* 3 genererade visuellt fina hundar, men inte samma hund. Pälsstrukturen varierade, proportionerna skiftade och färgnyansen ändrades mellan generationer. Det spelade ingen roll hur exakt prompten var, modellen hade inget minne av den individ vi försökte reproducera.
 
 Orsaken: Imagen 3 saknar stöd för <abbr class="tooltip-term" title="referenceImages">reference images</abbr> i text-to-image-läge. Utan referensbild finns inget sätt att låsa identiteten.
 
-**Pivot 2: Funktionen finns, men inte via API.**
+**Omtag 2: Funktionen finns, men inte via API.**
 
-Nästa steg var att undersöka alternativ. Genom att studera nätverkstrafiken i Google AI Studio identifierades att Gemini 3 Pro Image Preview faktiskt stödjer reference images i gränssnittet. Man laddar upp en referensbild och modellen genererar nya poser av samma individ med hög konsistens.
+Nästa steg var att undersöka alternativ. Genom att studera nätverkstrafiken i Google AI Studio*(tooltip: AIStudio)* identifierades att Gemini 3 Pro Image Preview faktiskt stödjer reference images i gränssnittet. Man laddar upp en referensbild och modellen genererar nya poser av samma individ med hög konsistens.
 
-Problemet: funktionen exponeras inte via något publikt <abbr class="tooltip-term" title="API">API</abbr>. Det vi hittade var en intern <abbr class="tooltip-term" title="RPC">RPC</abbr>-endpoint och ett file ID-system som inte är dokumenterat eller stabilt. En lösning byggd på det är inte hållbar.
+Men funktionen exponeras inte via något publikt API*(tooltip)*. Det vi hittade var en intern RPC*(tooltip)*-endpoint och ett file ID-system som inte är dokumenterat eller stabilt. En lösning byggd på det är inte hållbar.
 
-**Pivot 3: Manuell generation som tillfällig lösning.**
+**Omtag 3: Manuell generation som tillfällig lösning.**
 
-Automationsplanen lades åt sidan. Istället etablerades ett manuellt workflow i AI Studio: ladda upp referensbilder för varje hund, generera en pose i taget, spara enligt fast namnkonvention. Tidskrävande, men det ger den konsistens vi behöver.
+Automationsplanen lades åt sidan. Istället etablerades ett manuellt workflow i Google AI Studio: ladda upp referensbilder för varje hund, generera en pose i taget, spara enligt fast namnkonvention.
+
+Det är mer tidskrävande, men det ger den konsistens vi behöver. Det handlar om referensbilder vi tar fram en gång och vars kvalitet påverkar alla bilder vi tar fram, vilket gör att tidsinvesteringen är motiverad.
+
+---
 
 ## Resultat och lärdomar
 
 Tre referensbilder per hund genereras nu manuellt. Konsistensen är god. Automatiseringen väntar.
 
-**Det viktigaste vi lärde oss är att verktygsval styr output mer än promptprecision.** Vi lade mycket tid på att optimera prompter när det verkliga problemet var att vi använde fel modell för uppgiften. Ingen mängd finjustering av textbeskrivningar löser bristen på reference image-stöd.
+Det viktigaste vi lärde oss är att verktygsval styr output mer än promptprecision. Vi lade mycket tid på att optimera prompter när det verkliga problemet var att vi använde fel modell för uppgiften. Ingen mängd finjustering av textbeskrivningar löser bristen på reference image-stöd.
 
 Skillnaden mellan vad ett gränssnitt erbjuder och vad som finns tillgängligt via API är en lärdom som dyker upp gång på gång i det här arbetet. Funktioner i UI:t är ofta experimentella eller beroende av intern infrastruktur som inte är redo för extern användning. Det är en viktig mental modell när man planerar automation.
 
-AI fungerade bäst i den analytiska fasen. Att resonera kring varför Imagen och Gemini beter sig olika, kartlägga Googles bildsystem och formulera nästa hypotes var ChatGPT genuint hjälpsam med. Däremot löste inte AI det tekniska kärnproblemet, det krävde att vi faktiskt testade och förstod vad modellerna faktiskt klarar av.
+AI fungerade bäst i den analytiska fasen. Att resonera kring varför Imagen och Gemini beter sig olika, kartlägga Googles bildsystem och formulera nästa hypotes var ChatGPT genuint hjälpsam med. Däremot löste inte AI det tekniska kärnproblemet, det krävde att vi faktiskt testade och förstod vad modellerna klarar av.
+
+Det manuella workflowet är en tillfällig lösning. Den dag Google öppnar reference image-stöd via API förändras förutsättningarna helt, och mycket av det vi byggt manuellt kan automatiseras. Det är egentligen inte en fråga om vi kommer dit, utan när.
+
+:::nexttreshold[Vi väntar på]
+Google öppnar reference image-stöd via API*(tooltip)*. Funktionen finns redan i gränssnittet och när den når externa användare kan hela genereringsflödet automatiseras. Tills dess fortsätter det manuella workflowet.
+:::
+
+---
 
 ## Hur vi går vidare
 
-Det finns två möjliga vägar framåt. Den ena är att vänta på att Gemini image-API öppnas för externa användare. Funktionen finns redan i produkten och sannolikheten att den blir tillgänglig via API är hög, frågan är bara när.
+Nästa steg beror på vad Google gör. Om Gemini image API*(tooltip)* öppnas för externa användare kan hela flödet automatiseras med den konsistens vi redan sett i gränssnittet. Det är den enklaste vägen och sannolikheten att det händer är hög, frågan är bara när.
 
-Den andra är <abbr class="tooltip-term" title="DreamBooth">DreamBooth</abbr> via Replicate*(tooltip)*. Det innebär att träna en egen modell per hund på ett fåtal bilder, vilket ger full kontroll över identiteten. Kostnaden är låg och resultaten är dokumenterat goda för just den här typen av uppgift. Det är det starkaste alternativet om Gemini-API:t dröjer.
+Om det dröjer är DreamBooth*(tooltip)* via Replicate*(tooltip)* det starkaste alternativet. Det innebär att träna en egen modell per hund på ett fåtal bilder, vilket ger full kontroll över identiteten oberoende av vad Google väljer att tillgängliggöra.
 
 Tills vidare fortsätter det manuella workflowet. Det fungerar och ger bra resultat. Att vänta på rätt verktyg är ibland det smartaste beslutet.
+
+---
 
 ## Verktyg i den här processen
 
@@ -77,5 +92,3 @@ Tills vidare fortsätter det manuella workflowet. Det fungerar och ger bra resul
 - **Google AI Studio** – Webbgränssnitt för Gemini. Fungerar manuellt med reference images men saknar publikt API för funktionen.
 - **ChatGPT** – Användes för promptdesign, analys av modellbegränsningar och hypotesformulering.
 - **Cursor** – Strukturerade API-anrop och scripts under testfasen.
-- **Replicate** – Utvärderades som plattform för DreamBooth-träning. Ej implementerat.
-- **DreamBooth** – Teknik för individspecifik modellträning. Dokumenterat som nästa steg.
