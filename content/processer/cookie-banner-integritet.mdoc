@@ -9,7 +9,7 @@ skapad: 2026-02-19
 uppdaterad: 2026-02-19
 ---
 
-Många webbplatser löser cookie-hantering genom att köpa en tjänst. Cookiebot, OneTrust och Osano lovar GDPR*(tooltip: General Data Protection Regulation, EU:s dataskyddsförordning)*-compliance med några klick. Men de kostar pengar varje månad, ger sällan full kontroll över användarupplevelsen, och är ofta överdimensionerade för små organisationer.
+Många webbplatser löser cookie-hantering genom att köpa en tjänst. Cookiebot, OneTrust och Osano lovar GDPR*(tooltip)*-compliance med några klick. Men de kostar pengar varje månad, ger sällan full kontroll över användarupplevelsen, och är ofta överdimensionerade för små organisationer.
 
 Vi valde att bygga vår egen. Kostnaden är lägre, men det var inte det som avgjorde. Det handlade om att ha kontroll över hur integritet faktiskt hanteras, inte bara hur det ser ut utåt.
 
@@ -19,7 +19,7 @@ Cookie-hantering är inte en juridisk checkbox. Det är en del av användarupple
 
 Den grundläggande förutsättningen var att bannern faktiskt respekterar användarens val. Inte bara visar en modal och ignorerar svaret, utan stoppar tracking omedelbart när användaren säger nej. Det låter självklart, men många implementationer, inklusive en del betalda tjänster, gör inte det.
 
-Vi ville att integrationen med vår tracking-infrastruktur skulle vara direkt, utan mellanhand. Cookie-val behöver nå GTM*(tooltip: Google Tag Manager, Googles system för att hantera tracking-script på webbplatsen)* <abbr class="tooltip-term" title="Googles ramverk som låter tracking-verktyg respektera cookie-val utan att stoppa datainsamlingen helt">Consent Mode v2</abbr> och <abbr class="tooltip-term" title="Facebooks spårningskod som mäter besökarnas beteende på webbplatsen">Meta Pixel</abbr> utan fördröjning eller beroende av externa scripts som kan misslyckas. Hur cookie-hanteringen hänger ihop med den övergripande tracking-arkitekturen beskriver vi i [Tracking byggt för att svara på affärsfrågor](/arbete/tracking-setup-flocken).
+Vi ville att integrationen med vår tracking-infrastruktur skulle vara direkt, utan mellanhand. Cookie-val behöver nå GTM*(tooltip)* <abbr class="tooltip-term" title="ConsentMode">Consent Mode v2</abbr> och <abbr class="tooltip-term" title="MetaPixel">Meta Pixel</abbr> utan fördröjning eller beroende av externa scripts som kan misslyckas. Hur cookie-hanteringen hänger ihop med den övergripande tracking-arkitekturen beskriver vi i [Tracking byggt för att svara på affärsfrågor](/arbete/tracking-setup-flocken).
 
 Kostnaden spelade roll. Flera hundra kronor i månaden för en cookie-tjänst är en onödig utgift när lösningen kan byggas en gång och sedan uppdateras i takt med förändrade regler och behov.
 
@@ -29,7 +29,7 @@ Istället för att googla "bästa cookie banner-tjänst" beskrev jag problemet f
 
 Det blev en designdialog där vi byggde lösningen steg för steg. Vi diskuterade hur consent-val ska lagras, hur Consent Mode v2 fungerar internt i GTM, och hur Meta Pixel hanterar när en användare drar tillbaka sitt samtycke.
 
-**Konkret exempel:** ChatGPT föreslog inledningsvis att spara consent i cookies. Jag påpekade att det skapar en cirkelreferens: vi behöver spara consent innan vi kan sätta cookies. Vi landade i localStorage*(tooltip: webbläsarens inbyggda lagring som sparar data lokalt på användarens enhet, utan att kräva server-kommunikation)*, som är tillgängligt direkt och inte kräver cookies för att fungera.
+**Konkret exempel:** ChatGPT föreslog inledningsvis att spara consent i cookies. Jag påpekade att det skapar en cirkelreferens: vi behöver spara consent innan vi kan sätta cookies. Vi landade i localStorage*(tooltip)*, som är tillgängligt direkt och inte kräver cookies för att fungera.
 
 Den stora skillnaden mot att köpa tjänst var att vi designade lösningen för vår specifika stack. Istället för att anpassa vår stack till en generisk tjänst byggde vi något som passar exakt våra behov.
 
@@ -37,11 +37,11 @@ Den stora skillnaden mot att köpa tjänst var att vi designade lösningen för 
 
 Cookie-bannern är implementerad som vanilla JavaScript i en enda fil, utan externa bibliotek eller ramverk. Den består av tre delar: visuell banner, consent-lagring, och integration med tracking-systemen.
 
-**Den visuella bannern** är en <abbr class="tooltip-term" title="mobilmönster där ett panel glider upp från skärmens nederkant">bottom sheet</abbr> som visas vid första besök. Vi designade mobile-first med safe-area-stöd för iPhone-notch och max-height på 85 % av skärmhöjden för att fungera på alla skärmstorlekar. Touch targets uppfyller WCAG*(tooltip: Web Content Accessibility Guidelines, riktlinjer för webbtillgänglighet)* 2.1, vilket innebär minst 44 px höjd på alla interaktiva element. Användaren kan välja "Tillåt alla", "Spara val" med individuella toggles per kategori, eller acceptera bara nödvändiga cookies.
+**Den visuella bannern** är en <abbr class="tooltip-term" title="bottomSheet">bottom sheet</abbr> som visas vid första besök. Vi designade mobile-first med safe-area-stöd för iPhone-notch och max-height på 85 % av skärmhöjden för att fungera på alla skärmstorlekar. Touch targets uppfyller WCAG*(tooltip)* 2.1, vilket innebär minst 44 px höjd på alla interaktiva element. Användaren kan välja "Tillåt alla", "Spara val" med individuella toggles per kategori, eller acceptera bara nödvändiga cookies.
 
 **Consent-lagring** sker i localStorage med nyckeln `cookie-consent`. Objektet innehåller tre värden: `necessary` (alltid true), `analytics` och `marketing`, plus en timestamp. Det gör att vi kan läsa valet direkt när sidan laddas, utan att vänta på externa scripts.
 
-**Integration med tracking** sker via två kanaler. GTM Consent Mode v2 uppdateras via dataLayer*(tooltip: GTM:s datakö för att skicka information från webbplatsen till tracking-verktyg)* när användaren gör ett val. `analytics_storage` och `ad_storage` sätts till `granted` eller `denied` baserat på valet. Meta Pixel tar emot ett `fbq('consent', 'grant')` eller `fbq('consent', 'revoke')` beroende på om marketing-cookies är aktiverade.
+**Integration med tracking** sker via två kanaler. GTM Consent Mode v2 uppdateras via dataLayer*(tooltip)* när användaren gör ett val. `analytics_storage` och `ad_storage` sätts till `granted` eller `denied` baserat på valet. Meta Pixel tar emot ett `fbq('consent', 'grant')` eller `fbq('consent', 'revoke')` beroende på om marketing-cookies är aktiverade.
 
 När användaren senare ändrar val via "Cookie-inställningar" i footern rensas cookies och localStorage för de kategorier som avaktiveras. Det är inte bara att stoppa framtida tracking, utan att faktiskt ta bort det som redan samlats in.
 
@@ -66,7 +66,7 @@ På längre sikt behöver vi consent-hantering för iOS och Android-apparna. Nä
 ## Verktyg i den här processen
 
 - **Vanilla JavaScript** – Ingen ramverk, inga externa bibliotek. En fil som fungerar överallt.
-- **localStorage API** – Lagrar consent-val utan att kräva cookies. *(tooltip: webbläsarens inbyggda lagring)*
+- **localStorage API** – Lagrar consent-val utan att kräva cookies. *(tooltip: localStorage)*
 - **GTM Consent Mode v2** – Googles ramverk för GDPR-compliant tracking. Uppdateras direkt via dataLayer.
 - **Meta Pixel Consent API** – Hanterar när Meta Pixel ska aktiveras eller stängas av baserat på användarens val.
 - **ChatGPT** – Användes som designpartner för arkitektur och problemlösning.

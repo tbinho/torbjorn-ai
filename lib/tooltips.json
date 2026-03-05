@@ -1,0 +1,16 @@
+{
+  "GDPR": "General Data Protection Regulation – EU:s dataskyddsförordning",
+  "GTM": "Google Tag Manager – Googles system för att hantera tracking-script på webbplatsen",
+  "localStorage": "Webbläsarens inbyggda lagring som sparar data lokalt på användarens enhet, utan att kräva server-kommunikation",
+  "WCAG": "Web Content Accessibility Guidelines – riktlinjer för webbtillgänglighet",
+  "dataLayer": "GTM:s datakö för att skicka information från webbplatsen till tracking-verktyg",
+  "API": "Application Programming Interface – gränssnitt för att kommunicera med externa tjänster programmatiskt",
+  "RPC": "Remote Procedure Call – protokoll för att anropa funktioner på en fjärrserver",
+  "DreamBooth": "Teknik för att träna en AI-modell på ett fåtal bilder av ett specifikt motiv för att reproducera det konsekvent",
+  "Replicate": "Plattform för att köra och träna AI-modeller via API",
+  "VertexAI": "Vertex AI – Googles molnplattform för AI-tjänster, inkluderar bildgenerering via Imagen",
+  "ConsentMode": "Consent Mode v2 – Googles ramverk som låter tracking-verktyg respektera cookie-val utan att stoppa datainsamlingen helt",
+  "MetaPixel": "Meta Pixel – Facebooks spårningskod som mäter besökarnas beteende på webbplatsen",
+  "referenceImages": "Referensbilder som AI:n använder för att matcha stil eller identitet i nya generationer",
+  "bottomSheet": "Mobilmönster där ett panel glider upp från skärmens nederkant"
+}

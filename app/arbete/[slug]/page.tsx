@@ -37,18 +37,40 @@ export default async function ProcessPage({
   // Ta bort frontmatter
   const contentWithoutFrontmatter = fileContent.replace(/^---[\s\S]*?---[\r\n]+/, '').trim()
 
-  // Pre-processa tooltips: TERM*(tooltip: förklaring)* → <abbr>
-  // Matchar exakt ett ord omedelbart före *(tooltip:...)*
-  const contentWithTooltips = contentWithoutFrontmatter.replace(
-    /(\w[\w\-]*)\*\(tooltip:\s*([^)]+)\)\*/g,
-    '<abbr class="tooltip-term" title="$2">$1</abbr>'
-  ).replace(
-    // Ensamma *(tooltip:...)* utan term framför (t.ex. i verktygslistan)
-    /\*\(tooltip:\s*([^)]+)\)\*/g,
-    '<abbr class="tooltip-term" title="$1">ⓘ</abbr>'
-  )
+  // Ladda tooltip-biblioteket
+  const tooltipsPath = path.join(process.cwd(), 'lib', 'tooltips.json')
+  const tooltips: Record<string, string> = JSON.parse(await fs.readFile(tooltipsPath, 'utf-8'))
+
+  // Pre-processa tooltips i tre steg:
+  const contentWithTooltips = contentWithoutFrontmatter
+    // 1. TERM*(tooltip)* – slår upp TERM i JSON (ny ren syntax)
+    .replace(/(\w[\w\-]*)\*\(tooltip\)\*/g, (_, term) => {
+      const explanation = tooltips[term]
+      return explanation
+        ? `<abbr class="tooltip-term" title="${explanation}">${term}</abbr>`
+        : term
+    })
+    // 2. TERM*(tooltip: NYCKEL_ELLER_FÖRKLARING)* – om NYCKEL finns i JSON används den, annars används texten direkt
+    .replace(/(\w[\w\-]*)\*\(tooltip:\s*([^)]+)\)\*/g, (_, term, content) => {
+      const explanation = tooltips[content.trim()] ?? content.trim()
+      return `<abbr class="tooltip-term" title="${explanation}">${term}</abbr>`
+    })
+    // 3. *(tooltip: NYCKEL_ELLER_FÖRKLARING)* utan föregående term – visas som ⓘ
+    .replace(/\*\(tooltip:\s*([^)]+)\)\*/g, (_, content) => {
+      const explanation = tooltips[content.trim()] ?? content.trim()
+      return `<abbr class="tooltip-term" title="${explanation}">ⓘ</abbr>`
+    })
 
   const htmlContent = await marked(contentWithTooltips)
+
+  // Post-processa HTML: lös upp JSON-nycklar i <abbr title="NYCKEL"> från hårdkodade taggar i mdoc
+  const htmlWithResolvedTitles = htmlContent.replace(
+    /(<abbr[^>]*\s)title="([^"]+)"/g,
+    (match, prefix, title) => {
+      const resolved = tooltips[title]
+      return resolved ? `${prefix}title="${resolved}"` : match
+    }
+  )
 
   return (
     <div className="container-narrow py-16 md:py-24">
@@ -78,7 +100,7 @@ export default async function ProcessPage({
       {/* Innehåll från Markdown */}
       <article
         className="prose"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
+        dangerouslySetInnerHTML={{ __html: htmlWithResolvedTitles }}
       />
 
       {/* Navigation */}
