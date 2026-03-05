@@ -10,7 +10,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Purpose:** Showcase AI-integrated work processes
 - **Tech stack:** Next.js 15, TypeScript, Tailwind CSS, Keystatic
-- **Deployment:** Vercel (tbinho GitHub)
+- **Production:** https://www.torbjornsai.site
+- **Tech stack:** Next.js 15, TypeScript, Tailwind CSS, Keystatic CMS
 
 **Related repos:**
 - `spitakolus` → shared documentation (general rules)
@@ -135,17 +136,41 @@ color, minimalist, clean, professional, square format
 
 ---
 
-## Git Workflow
+## Deployment
 
-Standard workflow (no special remotes needed):
+### Setup (hur det är konfigurerat)
+
+Vercel Hobby-planen tillåter bara ett GitHub-konto per team. Torbjörns Vercel-team
+är kopplat till **RaquelSandblad**-kontot. Därför deployas via ett privat spegelrepo:
+
+- `origin` → `tbinho/torbjorn-ai` (backup/källkod)
+- `raquel` → `RaquelSandblad/torbjorn-ai` (Vercel deployas härifrån)
+
+Vercel är anslutet till `RaquelSandblad/torbjorn-ai` och deployas automatiskt vid push.
+
+### Deploy-kommando
 
 ```bash
 git add .
 git commit -m "Description"
-git push origin main
+git push origin main   # backup
+git push raquel main   # triggar Vercel-deploy
 ```
 
-Vercel auto-deploys from main branch.
+### Credentials för raquel-remote
+
+`git push raquel main` kräver RaquelSandblads GitHub-credentials.
+Windows Credential Manager cachas dessa efter första inloggningen.
+
+Om det frågar om credentials: använd ett Personal Access Token (PAT) med scope `repo`
+skapat på RaquelSandblads GitHub-konto (Settings → Developer settings → Tokens).
+
+### Domän & DNS
+
+- **Domän:** `torbjornsai.site` (registrerad hos Loopia)
+- **Namnservrar:** Bytta till Vercels (`ns1.vercel-dns.com`, `ns2.vercel-dns.com`)
+- **DNS hanteras av Vercel** (inte Loopia DNS-editor)
+- **Production URL:** https://www.torbjornsai.site
 
 ---
 
