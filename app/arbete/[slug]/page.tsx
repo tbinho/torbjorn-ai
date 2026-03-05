@@ -41,8 +41,18 @@ export default async function ProcessPage({
   const tooltipsPath = path.join(process.cwd(), 'lib', 'tooltips.json')
   const tooltips: Record<string, string> = JSON.parse(await fs.readFile(tooltipsPath, 'utf-8'))
 
+  // Pre-processa NextThreshold-callouts
+  // Syntax i mdoc: :::nexttreshold[Rubrik]\nInnehåll\n:::
+  const contentWithCallouts = contentWithoutFrontmatter.replace(
+    /^:::nexttreshold\[([^\]]*)\]\n([\s\S]*?)\n^:::\s*$/gm,
+    (_, title, body) => {
+      const bodyHtml = body.trim().replace(/\n/g, '<br>')
+      return `<div class="callout-nexttreshold"><p class="callout-nexttreshold__title">${title}</p><p class="callout-nexttreshold__body">${bodyHtml}</p></div>`
+    }
+  )
+
   // Pre-processa tooltips i tre steg:
-  const contentWithTooltips = contentWithoutFrontmatter
+  const contentWithTooltips = contentWithCallouts
     // 1. TERM*(tooltip)* – slår upp TERM i JSON (ny ren syntax)
     .replace(/(\w[\w\-]*)\*\(tooltip\)\*/g, (_, term) => {
       const explanation = tooltips[term]
