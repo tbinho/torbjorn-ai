@@ -192,6 +192,22 @@ a:hover {
 }
 
 /* ----------------------------------------
+   TOOLTIPS
+   ---------------------------------------- */
+
+.tooltip-term {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #3D6B5C;
+  text-underline-offset: 3px;
+  cursor: help;
+  font-style: normal;
+  position: relative;
+}
+
+/* Native tooltip via title-attribut visas av webbläsaren på hover */
+
+/* ----------------------------------------
    SELECTION
    ---------------------------------------- */
 

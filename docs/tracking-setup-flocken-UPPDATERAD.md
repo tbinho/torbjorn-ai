@@ -1,0 +1,80 @@
+# Tracking byggt för att svara på affärsfrågor
+
+I många marknadsteam är bristfällig tracking ofta ett grundläggande problem. Interna resurser saknas, externa leverantörer är dyra, och det är svårt att ens formulera en bra kravspec, än mindre följa upp vad man faktiskt fått. Man pratar inte samma språk som leverantören. Resultatet är ofta en dashboard som är känslig för nya datakällor och där förändrade regler successivt urholkar datakvaliteten. Och när man till slut förstår vad man egentligen vill ha, finns varken tid eller budget att göra om jobbet.
+
+Det är precis det problemet AI löser. Med en direkt dialog med en teknisk samtalspartner som har full kontroll på hela flödet kan man iterera snabbt, testa tidigt och justera efter behov, utan att vara beroende av en extern leverantör. Dokumentationen är alltid uppdaterad, och produktionssatt eller inte, man kan alltid gå in och ändra.
+
+Grunden för skalbar marknadsföring är bra data. Utan den är det en dyr gissningslek. Därför satte jag tänderna tidigt i systemet och lade en ribba som de flesta små organisationer inte skulle lägga, just för att en dålig datauppsättning helt enkelt kostar för mycket och bromsar möjligheten att växa.
+
+---
+
+## Vad vi ville uppnå
+
+Tracking i sig är inte ett mål. Det jag ville ha var data som faktiskt svarar på affärsfrågor, från dag ett, utan sex månader av städning efteråt.
+
+Tre konkreta krav styrde designen: datan ska driva beslut om marknadsspend, strukturen ska inkludera webb, appar i både iOS och Android samt alla relevanta marknadskanaler. Allt ska vara byggt för att stödja den automatiserade tillväxtloop vi rör oss mot.
+
+---
+
+## Hur vi tänkte
+
+Istället för att googla "GA4 best practices" beskrev jag affärsmodellen för ChatGPT och ställde frågan: *Vilka frågor behöver jag kunna svara på med data?* Jag använde VS Code som IDE till en början och bytte under resans gång till Cursor.
+
+Det blev startpunkten för en designdialog som sparade veckor av trial-and-error. Inte för att Claude hade svaren, utan för att processen tvingade mig att tänka bakifrån. Från beslut till data, inte från verktyg till data.
+
+Ett konkret exempel: när vi diskuterade eventnamn föreslog jag `user_signup`, `listing_add`, `premium_buy`. Problemet var att namngivningen saknade ett konsekvent mönster, något som hade blivit smärtsamt att rätta till i efterhand. Vi landade i formatet `[action]_[object]`: `sign_up`, `listing_created`, `subscription_start`. Enkelt, men beslutet togs innan ett enda event skickades.
+
+---
+
+## Vad vi skapade
+
+Tracking-stacken består av flera lager som jobbar tillsammans.
+
+**GA4** tar emot events från webben och är förberedd för iOS och Android när apparna lanseras. En property per produkt, inte separata för webb och app. Det betyder att vi kan följa en användares resa från webbbesök till appinstallation i samma dashboard. Uppdelning sker via `platform`-fältet i BigQuery när det behövs.
+
+**GTM** agerar som mellanhand och routar trafik baserat på hostname. Samma container för flera produkter, men datan hålls separerad. Att blanda produkter i en container kändes riskabelt till en början, men hostname-routing löste det elegant. Resultatet är massivt mindre att underhålla.
+
+**Server-side tagging** via GTM Server Container var mer komplext att sätta upp än väntat. Custom domain, server container, routing, varje steg tog tid. Men det ger bättre datakvalitet, färre problem med ad blockers och first-party cookies som håller längre sessioner. Rätt beslut, men ta höjd för att det tar tid.
+
+**BigQuery** tar emot dagliga exporter och är strukturerat i tre lager: raw, curated och marts. Just nu används bara raw-lagret. Curated och marts byggs ut när custom events är på plats.
+
+Hela infrastrukturen är EU-hostad och GDPR-compliant från dag ett, med Consent Mode v2 implementerat i GTM.
+
+---
+
+## Resultat och lärdomar
+
+Setupen är live. GA4 tar emot events från produktion, enhanced measurement trackar scroll och nedladdningar automatiskt, och data exporteras dagligen till BigQuery.
+
+Det intressanta är inte vad som är klart, det är vad som nu är möjligt. Vi kan följa en användares resa från webbbesök till appinstallation till prenumeration. Vi kan separera iOS från Android i samma dashboard. Vi kan jämföra produkter i samma BigQuery-projekt men med separata datasets.
+
+**Vad vi lärde oss:**
+
+AI som designpartner funkar, men kräver rätt input. Frågan "hur sätter jag upp GA4?" ger ett generiskt svar. Frågan "vilka affärsbeslut ska den här datan driva?" ger en infrastruktur som faktiskt håller.
+
+Delad infrastruktur var rätt beslut, trots att det kändes läskigt. En container för flera produkter med hostname-routing är mycket lättare att underhålla än separata setups per produkt.
+
+GDPR i efterhand är dyrare än GDPR från start. Consent Mode v2, EU-hosting, cookie-hantering, allt implementerades dag ett. Det hade varit avsevärt jobbigare att retrofita.
+
+Naming conventions måste låsas tidigt. Formatet `[action]_[object]` dokumenterades innan första eventet skickades. Att ändra eventnamn i efterhand påverkar historisk data och alla dashboards som bygger på den.
+
+---
+
+## Hur vi går vidare
+
+Närmaste steg är att implementera custom events, `sign_up`, `listing_created`, `app_install`, och verifiera dem i GTM preview mode innan de går live.
+
+Därefter byggs curated-lagret i BigQuery med SQL-transformationer: standardiserad eventstruktur, parameterformat och en identity map för cross-platform-stitching. Det öppnar för Looker Studio-dashboards och automatiserad veckorapportering.
+
+På längre sikt, när apparna är i produktion, läggs data streams till för iOS och Android. Då går tracking-infrastrukturen från att vara ett mätverktyg till att vara en aktiv del av den automatiserade tillväxtloopen vi bygger mot.
+
+---
+
+## Verktyg i den här processen
+
+- **GA4** – Googles analysplattform. Tar emot events från webb och app i en gemensam property.
+- **GTM** – Mellanhand som hanterar routing av events. En delad container för flera produkter med hostname-baserad separation.
+- **BigQuery** – Googles databas för storskalig dataanalys. Tar emot dagliga GA4-exporter, strukturerat i raw, curated och marts.
+- **ChatGPT** – Användes som designpartner för att resonera kring eventstruktur och arkitektur innan något implementerades.
+- **VS Code / Cursor** – IDE för implementation. Startade i VS Code och bytte till Cursor under resans gång, båda i agentläge för att omsätta beslut till kod.
+- **Consent Mode v2** – Googles ramverk för GDPR-compliant datainsamling.

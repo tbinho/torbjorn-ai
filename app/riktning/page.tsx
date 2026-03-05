@@ -11,217 +11,171 @@ export default function RiktningPage() {
 
       {/* Innehåll */}
       <article className="prose">
-        <p className="text-lg">
-          AI kommer i grunden att förändra hur vi utför våra arbeten, det är
-          min fasta övertygelse. Det är ganska svulstiga ord, men inte något
-          jag är ensam om att tro. Det häftiga är att tekniken är väldigt
-          lättåtkomlig. Den finns tillgänglig gratis och kräver ingen teknisk
-          kompetens.
+
+        {/* Det som redan hänt */}
+        <h2>Det som redan hänt</h2>
+
+        <p>
+          Skiftet är inte på väg. Det pågår redan.
         </p>
 
         <p>
-          Redan nu har AI i grunden förändrat hur jag utför mitt eget arbete.
-          Därför tänker jag dela med mig av hur jag arbetar, för den som vill
-          lyssna. En hel del av det jag gör på dagarna borde kunna inspirera
-          andra, på samma sätt som jag själv dagligen inspireras av hur andra
-          arbetar med AI.
+          Många arbetsuppgifter som för ett par år sedan krävde flera personer eller externa
+          specialister kan i dag utföras av en person med rätt förhållningssätt och rätt verktyg.
+          Det gäller inte i framtiden. Det gäller nu, i det dagliga arbetet, i de flesta branscher.
         </p>
 
         <p>
-          Det är inga färdiga modeller eller processer, och ingen ambition att
-          täcka allt. AI händer här och nu. Viktigare än att lära sig allt är
-          att hela tiden förflytta sina gränser och vara i rörelse.
+          Jag har arbetat med marknadsföring i över tio år. Under det senaste året har AI i
+          grunden förändrat hur jag utför mitt arbete, vad jag kan ta ansvar för och hur snabbt
+          jag kan röra mig. Det är inte en åsikt. Det är något jag ser i varje arbetsdag.
+        </p>
+
+        <p>
+          Det är därför jag dokumenterar det jag gör. Inte för att ha färdiga modeller att dela
+          ut, utan för att visa hur det faktiskt ser ut när man arbetar med AI på riktigt, i
+          verkliga processer, med verkliga resultat.
         </p>
 
         {/* Tio år av att lösa problem */}
         <h2>Tio år av att lösa problem</h2>
 
         <p>
-          Till AI har jag precis samma förhållningssätt som till teknik under
-          de senaste dryga tio åren som marknadsförare. Det innebär att jag
-          under lång tid har tränat på att leta efter teknik som kan användas
-          för att lösa mina problem i arbetet. I grunden kan jag därför
-          resonera på samma sätt kring AI, även om potentialen i tekniken är
-          extremt mycket större.
+          Mitt förhållningssätt till AI är i grunden samma som mitt förhållningssätt till teknik
+          under hela min karriär som marknadsförare.
         </p>
 
         <p>
-          Komplexiteten är både större och mindre. Större eftersom
-          möjligheterna är obegränsade. Mindre eftersom jag kan fråga tekniken
-          själv om råd hur den ska användas. Jag måste helt enkelt pusha mig
-          att både tänka större och att ifrågasätta mer.
+          Jag har aldrig sett mig som teknisk. Men jag har alltid löst problem med teknik. Jag
+          utgår från vad jag vill uppnå och letar sedan efter systemen som löser uppgiften, aldrig
+          tvärtom. Det har inneburit att jag plockat russinen ur martech-kakan, ofta hittat mindre
+          system som löser en specifik uppgift riktigt bra och kopplat ihop dem på sätt som inte
+          stod i någon manual.
         </p>
 
         <p>
-          Som marknadsförare är jag en doer som inte bara tänker strategi,
-          utan även konfigurerar system och skapar innehåll. Jag är generalist
-          som varit inne och grottat i de flesta irrgångar som kan samlas
-          under begreppet digital marknadsföring. Och jag är en problemlösare
-          som hela tiden letar nya vägar framåt.
+          Som marknadsförare är jag en doer. Inte bara strategi, utan också konfiguration,
+          innehåll och implementation. Generalist som grottat i de flesta irrgångar inom digital
+          marknadsföring och en problemlösare som alltid letar nya vägar framåt.
+        </p>
+
+        <p>
+          Det förhållningssättet är precis vad AI kräver. Tekniken har utvecklats så snabbt att
+          det sällan finns etablerade best practices att luta sig mot. Nyfikenhet och
+          problemlösningsförmåga är viktigare än expertstatus. Expertisen ligger snarare i att ha
+          en varierad palett av verktyg och förstå hur de kan användas i den egna vardagen.
         </p>
 
         {/* AI som grundförutsättning */}
-        <h2>AI som grundförutsättning – inte ett verktyg</h2>
+        <h2>AI som grundförutsättning</h2>
 
         <p>
-          Jag ser inte AI som ett verktyg att "lägga till" i sitt arbete.
-          Det är nya tekniska förutsättningar som förändrar hur själva
-          arbetet kan utföras.
+          Jag ser inte AI som ett verktyg att lägga till i arbetet. Det är nya tekniska
+          förutsättningar som förändrar hur själva arbetet kan utföras.
         </p>
 
         <p>
-          När du tidigare hela tiden behövde styra systemen och skapa regler,
-          kan du nu jobba sida vid sida med systemen och gemensamt komma
-          framåt. AI ger systemen en enorm kunskap som du i alla led av en
-          arbetsuppgift kan dra nytta av. Därför kan du ta in AI direkt,
-          innan du ens är klar över hur arbetet ska genomföras.
+          Tidigare behövde du styra systemen och skapa regler för varje steg. Nu kan du arbeta
+          sida vid sida med dem. Jobba tillsammans, bolla idéer och få konkret hjälp med det du
+          inte klarar själv eller hinner med.
         </p>
 
         <p>
-          Det betyder inte att AI löser allt. Men det betyder att
-          begränsningarna i mycket större utsträckning har flyttats från
-          systemen till människan. Det som bromsar arbetet blir vår egen
-          föreställning om vad som är möjligt, rimligt eller "vårt jobb".
-        </p>
-
-        {/* Att lösa problem slår att följa expertis */}
-        <h2>Att lösa problem slår att följa expertis</h2>
-
-        <p>
-          Det är väldigt lärorikt att följa hur andra löser problem med AI.
-          Vägen mellan problemformulering och färdig lösning innehåller
-          nästan alltid någonting som du själv kan plocka upp.
+          Istället för att ta hjälp av ett system för att utföra din vision hjälper systemet dig
+          att förstå vad ett bra slutresultat ser ut som.
         </p>
 
         <p>
-          Tekniken har utvecklats så snabbt att det sällan finns etablerade
-          best practices att luta sig mot. Då blir nyfikenhet och
-          problemlösningsförmåga viktigare än expertstatus.
+          Det viktigaste skiftet är var begränsningarna nu finns. De har i mycket större
+          utsträckning flyttats från systemen till människan. Det som bromsar arbetet är inte
+          längre tekniken. Det är vår egen föreställning om vad som är möjligt, rimligt eller
+          "vårt jobb".
         </p>
 
         <p>
-          Expertisen ligger snarast i att ha en varierad palett av verktyg
-          och förstå hur de kan användas i din egen vardag.
+          Det är ett mentalt skifte lika mycket som ett tekniskt. Att hela tiden flytta arbetet
+          du är van att göra själv till din AI är svårare än det låter.
         </p>
 
-        {/* Små team, stora möjligheter */}
-        <h2>Små team, stora möjligheter</h2>
+        {/* Processer utan naturliga stopp */}
+        <h2>Processer utan naturliga stopp</h2>
 
         <p>
-          Mycket av mitt arbete har skett i mindre, entreprenöriella
-          sammanhang. Miljöer där resurserna varit begränsade, men där
-          friheten att testa själv har varit stor.
-        </p>
-
-        <p>
-          Det är bra förutsättningar för att få effekt av AI. Korta
-          beslutsvägar och öppna spjäll att testa är väldigt viktigt.
+          En av de mest konkreta förändringarna med AI är att processer som tidigare behövde
+          stanna upp för mänsklig inblandning nu kan fortsätta.
         </p>
 
         <p>
-          Samtidigt förs risker ofta på tal när man pratar om AI. Självklart
-          finns det juridiska, etiska och organisatoriska risker att ta
-          hänsyn till. Men jag ser ofta hur riskfokus fungerar som en
-          försvarsmekanism för att slippa kasta sig ut i det okända landskap
-          som AI innebär.
+          Moment som inte är strikt regelbaserade, analys, resonemang, kreativt arbete, kan i
+          dag utföras av AI. Det innebär att du kan driva flera processer samtidigt, på ett sätt
+          som tidigare krävde ett helt team.
         </p>
 
         <p>
-          Den allra största risken är att du och ditt företag ganska snart
-          kommer att få stora problem att hävda er om ni inte involverar AI
-          i de flesta delarna av ert arbete.
-        </p>
-
-        {/* När processer inte längre har naturliga stopp */}
-        <h2>När processer inte längre har naturliga stopp</h2>
-
-        <p>
-          En dramatisk förändring med AI är att processer som tidigare
-          behövde stanna upp för mänsklig inblandning nu kan fortsätta.
-          Även moment som inte är strikt regelbaserade – analys, resonemang,
-          kreativt arbete – kan idag utföras av AI.
+          "Men AI gör det inte tillräckligt bra", tänker du kanske, och relaterar till något du
+          testat som inte fungerade. Det stämmer ofta. Men om tre månader kan det komma en
+          uppdatering och plötsligt funkar det. Har du då redan testat, och kanske byggt in det
+          i din arbetsprocess, har du omedelbart uppdaterat dig själv. Har du väntat har du
+          tappat tid du inte får tillbaka.
         </p>
 
         <p>
-          Det innebär att parallellitet blir möjlig på ett helt annat sätt
-          än tidigare. Du kan utföra flera arbetsuppgifter samtidigt.
-        </p>
-
-        <p>
-          "Men AI gör det inte alls tillräckligt bra", tänker du kanske.
-          Sant. Men om tre månader kan det komma en uppdatering – och
-          plötsligt är den det. Har du då redan testat och byggt in det i
-          din arbetsprocess kommer du omedelbart att ha uppdaterat dig
-          själv i ditt arbete.
+          Det handlar om framtidssäkring. Inte om att ligga längst fram i någon trendkurva.
         </p>
 
         {/* Att äga sin domän på riktigt */}
         <h2>Att äga sin domän på riktigt</h2>
 
         <p>
-          AI gör det möjligt att ta ett större ansvar inom sin egen domän.
+          AI gör det möjligt att ta ett större ansvar inom sin egen domän, på ett sätt som
+          tidigare krävde specialister eller externa resurser.
         </p>
 
         <p>
-          För min del, som arbetar med marknadsföring, innebär det att jag
-          idag kan göra saker som tidigare krävde specialistroller eller
-          externa resurser. Som att sätta upp avancerad tracking, skapa
-          bildmaterial eller bygga funktioner till webbplatsen.
+          För mig som marknadsförare innebär det att jag i dag kan sätta upp avancerad
+          tracking-infrastruktur, skapa bildmaterial, bygga automatiserade flöden och skriva kod
+          för att koppla ihop system. Inte alltid lika bra som en specialist på respektive område,
+          men tillräckligt bra för att faktiskt utföra uppgiften.
         </p>
 
         <p>
-          Du kanske inte är riktigt lika bra som en specialist, men
-          tillräckligt bra för att utföra uppgiften. Du kan helt enkelt
-          bredda din yrkesroll.
-        </p>
-
-        {/* AI som kollega */}
-        <h2>AI som kollega – där du är chefen</h2>
-
-        <p>
-          AI är ofta imponerande intelligent, men kan samtidigt vara
-          förvånansvärt dålig på att förstå simpla instruktioner. Den är
-          inget ofelbart orakel, men en väldigt användbar kollega.
+          Det är en enorm förändring för små team. Och det är en av de saker jag tycker är mest
+          spännande med det som händer just nu.
         </p>
 
         <p>
-          Jag ser det som att jag arbetar tillsammans med AI. Jag släpper
-          inte tekniken fri och jag låter den inte styra mina mål. Däremot
-          influerar den dem genom att motivera och resonera i vår
-          kommunikation.
+          Du har fortfarande en fördel av att vara specialist, eftersom du vet hur ett bra
+          slutresultat ser ut och kan ställa rätt frågor. Men glöm inte att andra kan använda AI
+          för att förstå din spetskompetens. Och att du kan använda AI för att förstå deras.
+        </p>
+
+        {/* Det som står på spel */}
+        <h2>Det som står på spel</h2>
+
+        <p>
+          AI kommer att förändra arbetsmarknaden. Det är inte en fråga om om, utan om när och
+          hur snabbt.
         </p>
 
         <p>
-          Du är helt enkelt chefen och AI är din medarbetare. Där den är
-          junior har du ett ansvar att styra, där den är senior är
-          handlingsfriheten större.
-        </p>
-
-        {/* Vad som står på spel */}
-        <h2>Vad som står på spel</h2>
-
-        <p>
-          AI kommer förändra arbetsmarknaden, även om människor fortsatt
-          behövs. Många arbetsuppgifter som idag utförs av flera personer
-          kommer i framtiden kräva färre.
+          Många arbetsuppgifter som i dag utförs av flera personer kommer att kräva färre. Det
+          är redan sant inom flera områden. Om det leder till frigjord kapacitet eller till färre
+          jobb beror på om vi kan ersätta försvinnande arbetsuppgifter med något annat som är
+          värdeskapande. Det kommer vi att göra, men i vilken takt och för vem är ingen som vet.
         </p>
 
         <p>
-          Nej, fel. Framtiden är här. Många arbetsuppgifter kan redan idag
-          utföras av färre personer.
+          Det du kan göra är att börja använda AI som utgångspunkt i allt du gör. Inte som ett
+          experiment, utan som ett nytt sätt att arbeta. Då är du betydligt bättre positionerad
+          oavsett hur det utvecklar sig.
         </p>
 
         <p>
-          Det du kan göra själv är att börja använda AI som en utgångspunkt
-          i allt du gör. Då kommer du ligga mycket bättre till i alla
-          scenarion.
+          Det finns utan tvekan en piska i den här utvecklingen. Men moroten är att det är
+          genuint spännande att lära sig nytt, och att de som rör sig nu kommer att ha ett
+          försprång som är svårt att ta igen.
         </p>
 
-        <p>
-          Det finns utan tvekan en piska i den här utvecklingen. Men tack
-          och lov är moroten att det är väldigt spännande och roligt att
-          lära sig nytt.
-        </p>
       </article>
 
       {/* CTA */}

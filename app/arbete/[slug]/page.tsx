@@ -34,9 +34,21 @@ export default async function ProcessPage({
   const filePath = path.join(process.cwd(), 'content', 'processer', `${slug}.mdoc`)
   const fileContent = await fs.readFile(filePath, 'utf-8')
 
-  // Ta bort frontmatter och konvertera till HTML
-  const contentWithoutFrontmatter = fileContent.replace(/^---[\s\S]*?---\n/, '').trim()
-  const htmlContent = await marked(contentWithoutFrontmatter)
+  // Ta bort frontmatter
+  const contentWithoutFrontmatter = fileContent.replace(/^---[\s\S]*?---[\r\n]+/, '').trim()
+
+  // Pre-processa tooltips: TERM*(tooltip: förklaring)* → <abbr>
+  // Matchar exakt ett ord omedelbart före *(tooltip:...)*
+  const contentWithTooltips = contentWithoutFrontmatter.replace(
+    /(\w[\w\-]*)\*\(tooltip:\s*([^)]+)\)\*/g,
+    '<abbr class="tooltip-term" title="$2">$1</abbr>'
+  ).replace(
+    // Ensamma *(tooltip:...)* utan term framför (t.ex. i verktygslistan)
+    /\*\(tooltip:\s*([^)]+)\)\*/g,
+    '<abbr class="tooltip-term" title="$1">ⓘ</abbr>'
+  )
+
+  const htmlContent = await marked(contentWithTooltips)
 
   return (
     <div className="container-narrow py-16 md:py-24">
