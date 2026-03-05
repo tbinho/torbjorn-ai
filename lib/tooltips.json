@@ -14,5 +14,15 @@
   "referenceImages": "Referensbilder som AI:n använder för att matcha stil eller identitet i nya generationer",
   "bottomSheet": "Mobilmönster där ett panel glider upp från skärmens nederkant",
   "Imagen": "Imagen 3 – Googles text-to-image-modell för fotorealistisk AI-bildgenerering",
-  "AIStudio": "Google AI Studio – Googles webbgränssnitt för att arbeta med Gemini och andra AI-modeller utan kod"
+  "AIStudio": "Google AI Studio – Googles webbgränssnitt för att arbeta med Gemini och andra AI-modeller utan kod",
+  "ESP": "Email Service Provider – tjänst för att skicka och hantera epostutskick i stor skala",
+  "git": "Versionshanteringssystem som spårar alla ändringar i kod och möjliggör återgång till tidigare versioner",
+  "leadMagnet": "Gratisgåva eller erbjudande som lockar besökare att lämna sin kontaktinformation",
+  "TypeScript": "Programmeringsspråk byggt på JavaScript med statisk typkontroll för färre buggar i produktion",
+  "CTA": "Call to Action – knapp eller länk som uppmanar användaren att göra något specifikt",
+  "CronJob": "Schemalagt bakgrundsjobb som körs automatiskt vid bestämda tidpunkter",
+  "DNS": "Domain Name System – systemet som kopplar domännamn till servrar, e-postinställningar och säkerhetsposter",
+  "envLocal": ".env.local – lokal konfigurationsfil för hemliga nycklar och miljövariabler som aldrig committas till git",
+  "webhook": "Automatisk HTTP-notis som skickas från en tjänst till din server när en händelse inträffar",
+  "BigQuery": "Googles molnbaserade datalager för analys av stora datamängder"
 }
