@@ -50,11 +50,25 @@ Det ska aldrig kännas som självmarknadsföring. Det ska kännas som dokumentat
 - Listor som ersätter resonemang
 - Inledningar som börjar med bakgrund – börja med problemet eller insikten
 - **Klyschiga inledningar på avsnitt.** Undvik konstruktioner som "Målet var att..." eller "Syftet med detta var...". Börja med saken direkt.
-- **Upprepningar av samma poäng** inom ett avsnitt – säg det en gång, säg det bra
+- **Undvik kolon som introduktion.** "Hypotesen var enkel: extremt detaljerade prompter..." → "Hypotesen var enkel. Extremt detaljerade prompter...". Punkt eller omskrivning till löptext fungerar nästan alltid bättre.
+- **Tekniska detaljer bara när de bidrar till förståelsen.** Exakta färgkoder, promptexempel, konfigurationssträngar och liknande hör hemma i teknisk dokumentation, inte i artiklar. Om en detalj inte förklarar ett beslut eller en lärdom, stryk den.
+- **Avsluta avsnitt med en mening som öppnar framåt.** Inte en sammanfattning av vad som sagts, utan en mening som sätter upp nästa avsnitt eller skapar förväntning. "Det kändes som ett vattentätt upplägg" är ett exempel, det avslutar utan att avslöja vad som händer härnäst.
 
 ---
 
-## Hur strikt är strukturen?
+## Dramaturgi och rörelse
+
+Text utan rörelse är en samling tankar. Text med rörelse är ett argument. Varje artikel och varje längre text ska ha en riktning, från öppning till avslut, där avsnitten bygger på varandra snarare än existerar bredvid varandra.
+
+Fråga innan du skriver: vad ska läsaren ha med sig när de lägger ner texten? Bygg bakåt från det.
+
+**Öppna med slutsatsen, inte med uppvärmning.** Läsaren ska förstå vad texten handlar om och varför det spelar roll inom de första två meningarna. Ingen bakgrund, ingen kontext, ingen inledning till inledningen.
+
+**Konkreta ankare.** Abstrakta påståenden behöver minst en mening som landar dem i verkligheten. En formulering läsaren känner igen slår tre meningar av resonemang. Leta efter den meningen.
+
+**Avsluta varje avsnitt med en mening som spetsar eller öppnar** – inte en som sammanfattar det du precis sagt. Sammanfattningar dödar tempo.
+
+**Stryk inte utan att veta var poängen hamnar.** Innan ett stycke tas bort, fråga: vad försvinner härifrån och dyker det upp någon annanstans i texten? Om svaret är nej, skriv om istället för att stryka.
 
 Strukturen är obligatorisk som riktning – inte som checklista. Varje artikel behöver ett tydligt syfte och ett tydligt värde för läsaren. Resten är ett stöd, inte ett tvång.
 
@@ -93,13 +107,36 @@ Kompakt block. Verktyget + en rad om vad det gör och varför det valdes. Ger sn
 
 ---
 
-## ## Artiklar är levande dokument
+## Artiklar är levande dokument
 
 Artiklar skrivs om när projektet rör sig. Ingen ändringslogg under texten. Om något förändrats – uppdatera texten så att den alltid reflekterar nuläget.
 
 Om ett verktyg bytts ut, ett beslut omprövats eller ett resultat förändrats – det hör hemma i brödtexten, inte i en tidsstämplad not.
 
-## Internlänkning
+## Komponenten "Nästa tröskel"
+
+Många processer befinner sig i ett medvetet vänteläge. Inte för att vi inte kan gå vidare, utan för att förutsättningarna inte är rätt ännu, volymen inte motiverar tiden, eller för att ett verktyg eller en funktion saknas men är på väg.
+
+Det är ett strategiskt tänkesätt som ska synas i texten. Använd komponenten `NextThreshold` (en visuellt markerad callout-ruta) för att lyfta fram dessa lägen.
+
+**När den används:**
+- Ett API eller en funktion saknas men förväntas komma
+- Automatisering är möjlig men volymen motiverar det inte ännu
+- Vi har en plan som aktiveras när ett specifikt villkor uppfylls
+
+**Format i mdoc:**
+Komponenten läggs in som ett eget block i artikeln, vanligtvis i slutet av "Resultat och lärdomar" eller i "Hur vi går vidare". Den innehåller en kort rubrik och en till tre meningar som beskriver vad som saknas och vad som triggar nästa steg.
+
+**Design:**
+Subtil bakgrundsfärg i ton med accent `#3D6B5C`, tunn kantlinje, lite extra padding. Ska sticka ut för skumläsaren utan att dominera sidan.
+
+**Syntax i mdoc:**
+```
+:::nexttreshold[Rubrik här]
+Din text här. Kan vara flera meningar.
+Ny rad om du vill ha det.
+:::
+```
 
 Länka till andra artiklar eller avsnitt på sajten när det finns en naturlig koppling – ett verktyg som beskrivs på djupet i en annan process, ett beslut som hänger ihop med något i ett annat kluster, en lärdom som är relevant i ett annat sammanhang.
 
@@ -125,9 +162,26 @@ Tumregel: om man bara läser rubrikerna och fet text ska man ändå förstå po�
 - **Korta stycken** – 2–4 meningar, skrivet för mobilläsning
 - **Fetstil** för nyckelinsikter och konkreta exempel – sparsamt
 - **Kodformat** för eventnamn, tekniska strängar: `sign_up`, `[action]_[object]`
-- **Tooltips** på fackbegrepp första gången de nämns
 - Inga långa listor utan förklaring, varje punkt förtjänar ett sammanhang
-- **Inga tankestreck som bindemedel.** Tankestrecket är ett av de tydligaste AI-tecknen i löptext och ska undvikas. Ersätt med kommatecken, eller skriv om till två meningar. Undantaget är rubriker och ämnesrader där det kan vara motiverat.
+- **Undvik komma före "och".** Det är ett engelskt mönster (Oxford comma) som känns onaturligt i svenska. I uppräkningar sätts inget komma före det sista "och". Komma före "men" är korrekt svenska men används sparsamt, ofta är det bättre att skriva om till två meningar.
+
+---
+
+## Tooltips – riktlinjer
+
+Tooltips används för att förklara fackbegrepp och akronymer utan att störa löptextens tempo. Målet är att artiklar ska kunna läsas med behållning av någon som inte är insatt i AI eller utveckling, utan att texten behöver förenklas eller skrivas om.
+
+**Hur de fungerar:** Hover på markerat begrepp visar en kort förklaring i en liten popup.
+
+**När de används:** Första gången ett begrepp dyker upp i en artikel. Varje artikel ska kunna läsas individuellt, så ett begrepp som förekommer i flera artiklar får tooltip i var och en av dem.
+
+**Notation i artiklar:** Markera tooltip-ord med `TERM*(tooltip)*` direkt i löptexten, till exempel `API*(tooltip)*`. Förklaringen hämtas automatiskt från `lib/tooltips.json`. Lägg till nya termer i JSON-filen, inget annat behöver ändras.
+
+**Format på förklaringen:** En mening, max två. Tillräckligt för att läsaren ska hänga med, inte mer.
+
+**Vad som får tooltip:** Specifika begrepp och akronymer, till exempel "Vertex AI", "GTM", "DreamBooth". Inte lösa ord som "AI" eller "API" fristående, utan i kombination med ett specifikt namn eller sammanhang.
+
+**Vad som inte får tooltip:** Ord som redan förklaras naturligt i löptexten, eller begrepp som målgruppen med säkerhet känner till.
 
 ---
 
@@ -155,13 +209,17 @@ Bra test: skulle du klicka på det här om du såg det på LinkedIn?
 
 ## Verktygslistan – format
 
-Avsluta varje artikel med ett block. Verktyg ska vara exakta och ärliga, inklusive byten under resans gång. Det bygger trovärdighet.
+Avsluta varje artikel med ett block. Lista bara verktyg som faktiskt användes i processen. Verktyg som utvärderades men inte implementerades hör hemma i brödtexten, inte i listan.
 
-**Verktyg i den här processen**
-- **GA4** – Googles analysplattform. Tar emot events från webb och app. *(tooltip: Google Analytics 4)*
-- **GTM** – Mellanhand som hanterar vilka events som skickas var. *(tooltip: Google Tag Manager)*
-- **BigQuery** – Googles databas för storskalig dataanalys.
-- **ChatGPT** – Användes som designpartner i arkitekturfasen.
+Verktyg ska vara exakta och ärliga, inklusive byten under resans gång. Det bygger trovärdighet.
+
+**Format:**
+- **Verktygsnamn** – En rad om vad det gör och varför det valdes eller hur det användes.
+
+**Exempel:**
+- **Vertex AI / Imagen 3** – Googles text-to-image-modell. Utvärderades och övergavs på grund av avsaknad av reference image-stöd.
+- **ChatGPT** – Användes för promptdesign och hypotesformulering.
+- **Cursor** – Strukturerade API-anrop och scripts under testfasen.
 
 ---
 
@@ -170,4 +228,3 @@ Avsluta varje artikel med ett block. Verktyg ska vara exakta och ärliga, inklus
 AI kan forma och formulera, men de konkreta detaljerna måste komma från dig. Verkliga byten, verkliga misstag, verkliga beslut. Det är det som gör en artikel trovärdig och omöjlig att förväxla med generiskt AI-innehåll.
 
 Innan en artikel är klar, fråga dig: finns det något här som bara jag kan ha skrivit?
-

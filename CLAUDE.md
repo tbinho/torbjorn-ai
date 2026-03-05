@@ -136,6 +136,19 @@ color, minimalist, clean, professional, square format
 
 ---
 
+## Skrivguide
+
+Den aktiva skrivguiden ligger alltid i `docs/skrivguide.md`. Det är ett levande dokument – ingen versionsarkivering, git-historiken är versionshanteringen.
+
+**Uppdatera guiden:**
+1. Redigera `docs/skrivguide.md` direkt
+2. Commita med `git commit -m "Docs: update skrivguide – [kort beskrivning av ändringen]"`
+3. Pusha till båda remotes
+
+**Guiden täcker:** ton & röst, artikelstruktur, tooltip-syntax, NextThreshold-komponenten, formatregler och titelprincipen.
+
+---
+
 ## Deployment
 
 ### Setup (hur det är konfigurerat)
