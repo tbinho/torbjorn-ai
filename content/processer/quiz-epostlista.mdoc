@@ -1,0 +1,65 @@
+---
+titel: En epostlista byggd på en timme – med riktig infrastruktur
+sammanfattning: >-
+  Hur jag satte upp ett komplett epostsystem för quiz.flocken.info på under en dag,
+  med Supabase, MailerSend och automatiska välkomstmejl – och vad det egentligen
+  krävde under ytan.
+kluster: automation-arbetsfloden
+status: aktiv
+skapad: 2026-02-19
+uppdaterad: 2026-02-19
+---
+
+Quizplattformen på quiz.flocken.info har börjat dra trafik. Hundägare gör quiz, ser sina resultat, och lämnar. Det enda vi saknade var ett sätt att ta vara på den uppmärksamheten. Lösningen är enkel att beskriva: en ruta där besökaren lämnar sin mejladress och direkt får ett välkomstmejl med ett bonusquiz. Men att bygga det ordentligt är inte trivialt.
+
+## Vad vi ville uppnå
+
+Ett quiz är ett utmärkt tillfälle att fånga en mejladress. Personen har precis investerat några minuter, engagemanget är högt och de är nyfikna på mer. Problemet är att den känslan varar i sekunder efter att resultatsidan laddats. Vi ville träffa besökaren precis där, med ett konkret erbjudande: "Registrera dig och få quizet om kända hundar direkt."
+
+Det affärsmässiga värdet var tvåfaldigt. En epostlista ger ett direktkanal som inte är beroende av algoritmerna på Meta eller Google. Och ett välkomstmejl som skickas omedelbart bygger en vanare hos mottagaren att öppna mejl från oss, vilket är avgörande för leveransbarhet långsiktigt.
+
+## Hur vi tänkte
+
+Det första beslutet var om vi skulle använda ett färdigt verktyg som Mailchimp eller bygga något eget ovanpå MailerSend och Supabase. Svaret var enkelt: vi har redan båda. MailerSend används i ett annat projekt, Supabase likaså. Att lägga till en ny tabell i ett befintligt projekt kostar ingenting. Att skaffa ett nytt SaaS-konto kostar både pengar och tid.
+
+Det andra beslutet gällde epostmallen. MailerSend har en drag-and-drop-editor, men det finns ett problem med det: nästa gång vi vill uppdatera ett mejl sitter vi i ett webbgränssnitt istället för i kod. Jag ville att alla mallar ska leva i repot, versionshanteras med git och kunna uppdateras av Claude utan att vi behöver logga in i ett externt system. Det kräver att HTML-innehållet skrivs i kod och skickas direkt via API, utan att använda MailerSends template-motor.
+
+Det tredje beslutet var om lead magneten. Kända hundar-quizet är det starkaste vi har just nu. Det var ett naturligt val att låta det vara bonusen man får när man registrerar sig, och att formuläret därför inte visas på resultatsidan för just det quizet (de är redan på listan).
+
+## Vad vi skapade
+
+Systemet består av fyra delar som hänger ihop.
+
+**Formulärkomponenten** visas på alla quiz-resultatsidor utom kända hundar. Den har en hero-bild från quizet, ett e-postfält och en knapp. Fyra statuslägen hanteras: väntar, laddar, klart och "redan registrerad". Det sista är viktigt för att inte ge ett felmeddelande till någon som faktiskt gjort rätt sak.
+
+**API-routen** tar emot mejladressen, validerar den, sparar i Supabase och skickar välkomstmejlet. Dubbletter hanteras tyst, vilket är det enda rimliga beteendet när någon försöker registrera sig en gång till.
+
+**Supabase** fick två nya tabeller i det befintliga `spitakolus-support`-projektet: en för prenumeranter och en för framtida schemalagda utskick. Det senare är ett mönster som möjliggör att bygga e-postsekvenser utan att behöva ett externt automation-verktyg. Dag 3, dag 7, dag 14 kan läggas i kön och skickas via ett Vercel Cron Job.
+
+**MailerSend** hanterar själva utskicket. Avsändardomain är `email.flocken.info`, vilket krävde DNS-poster i Vercel (SPF, DKIM och CNAME för spårningspixel). Mailutskicket sker via direkt API-anrop med HTML-innehållet inbäddat, inte via MailerSends template-system.
+
+## Resultat och lärdomar
+
+Systemet fungerar. Formuläret tar emot adresser, Supabase lagrar dem och välkomstmejlet landar inom sekunder.
+
+Det som tog längst tid var inte koden, utan infrastrukturen runt om. DNS-verifieringen för `email.flocken.info` tar tid på sin gång, och miljövariabler som bara finns i `.env.local` hamnar inte automatiskt i Vercel. Det sistnämnda är ett klassiskt misstag som kostar onödig felsökning i produktion. Lösningen är att alltid konfigurera Vercel-variabler direkt efter att de är tillagda lokalt.
+
+**Beslutet att skriva HTML i kod** visade sig vara rätt av en anledning jag inte hade tänkt på från början: det tvingar oss att hålla mallarnas design enkel. MailerSends editor uppmuntrar till komplexa layouter med kolumner och bilder som sedan inte renderar rätt i Outlook. En textdominerad HTML-mall som skrivs för hand är mer robust och levereras bättre.
+
+Att dela Supabase-projekt med andra interna tjänster sparade en hel nod-kostnad. Konventiionen att prefixa tabeller med `flocken_` håller separationen tydlig utan att vi behöver separata projekt.
+
+## Hur vi går vidare
+
+Närmaste steget är att fylla `flocken_email_jobs`-tabellen med planerade utskick. Dag 3 kan innehålla ett annat quiz, dag 7 ett tips om Flocken-appen. Det är en e-postsekvens, men byggd på vår egen infrastruktur utan ett externt automation-verktyg.
+
+På lite längre sikt vill vi tracka öppningsfrekvens och klick via MailerSends webhook-API och lagra det i BigQuery. Det ger oss möjligheten att koppla mejlengagemang till app-installationer och se om epostlistan faktiskt driver nedladdningar.
+
+---
+
+## Verktyg i den här processen
+
+- **MailerSend** – E-postleverantör. Hanterar utskick, domänverifiering och leveransbarhet.
+- **Supabase** – Backend-databas. Lagrar prenumeranter och emailkö. Delat projekt för att undvika onödiga kostnader.
+- **Next.js API Routes** – Serverlogik för att ta emot formulärdata, validera och trigga utskick.
+- **Vercel** – Hosting och miljövariabler. DNS-hantering för `email.flocken.info`.
+- **Claude** – Arkitekt och bygger. Koden för komponenter, API-route, HTML-mallar och SQL skrevs med Claude i Cursor.
