@@ -28,7 +28,7 @@ export default async function ArbetePage() {
   // Sortera efter uppdaterad datum (nyast först)
   const sortedProcesser = processer.sort((a, b) => {
     if (!a || !b) return 0
-    return new Date(b.uppdaterad).getTime() - new Date(a.uppdaterad).getTime()
+    return new Date(b.uppdaterad ?? 0).getTime() - new Date(a.uppdaterad ?? 0).getTime()
   })
   return (
     <div className="container-wide py-16 md:py-24">
