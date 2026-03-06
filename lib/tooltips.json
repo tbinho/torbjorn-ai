@@ -31,5 +31,11 @@
   "Cursor": "AI-drivet kodverktyg byggt på VS Code där AI-agenten kan läsa, skriva och köra kod direkt i projektet",
   "GA4": "Google Analytics 4 – Googles analysplattform för att mäta besökarbeteende på webb och i appar",
   "serverSideTagging": "Server-side tagging – tracking som körs på servern istället för i webbläsaren, ger bättre datakvalitet och färre problem med ad blockers",
-  "LookerStudio": "Looker Studio – Googles gratisverktyg för att bygga interaktiva rapporter och dashboards från BigQuery och GA4"
+  "LookerStudio": "Looker Studio – Googles gratisverktyg för att bygga interaktiva rapporter och dashboards från BigQuery och GA4",
+  "CTR": "Click-through rate – andelen av alla som ser en annons som faktiskt klickar på den",
+  "CPC": "Cost per click – vad ett klick på en annons kostar i genomsnitt",
+  "CPM": "Cost per mille – vad 1 000 annonsvisningar kostar",
+  "UTM": "UTM-parametrar – spårningssträngar i URL:er som berättar för GA4 varifrån besökaren kom och vilken annons de klickade på",
+  "DCO": "Dynamic Creative Optimization – Meta-funktion som automatiskt kombinerar bilder, texter och rubriker för att hitta bästa kombinationen",
+  "MetaAPI": "Meta Marketing API – Metas programmatiska gränssnitt för att skapa och hantera annonskampanjer utan att använda Ads Manager"
 }

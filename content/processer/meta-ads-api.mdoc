@@ -1,0 +1,73 @@
+---
+titel: "Annonsering utan Ads Manager – ett system redo för AI-styrning"
+sammanfattning: >-
+  Ads Manager kräver en manuell session för varje optimering – det är en
+  flaskhals i allt som kan automatiseras. Vi hanterar Meta Ads via API och
+  scripts i stället, med en namnkonvention som gör kampanjdata direkt
+  analyserbar i BigQuery.
+kluster: automation-arbetsfloden
+status: aktiv
+skapad: 2026-03-06
+uppdaterad: 2026-03-06
+---
+
+Varje gång en annons behöver pausas, en budget justeras eller en ny variant publiceras kräver Ads Manager en manuell session i ett webbgränssnitt. Det fungerar. Men det är en flaskhals i allt som kan automatiseras – och det stänger ute AI:n helt.
+
+Vi valde att hantera Meta Ads via API*(tooltip)* i stället. Inte för att det är snabbare i dag, utan för att det bygger ett system som AI faktiskt kan styra.
+
+## Vad vi ville uppnå
+
+Det handlar inte om att spara tid på att skapa en enskild kampanj. En kampanj tar en timme att sätta upp via API*(tooltip)* och trettio minuter i Ads Manager. Den tidsvinsten är inte poängen.
+
+Poängen är vad som är möjligt i nästa steg. Om varje annons lever som ett skriptobjekt, om kampanjnamn bär kodad metadata och om all prestanda flödar till BigQuery*(tooltip)* – då kan ett system läsa data och skriva tillbaka ändringar utan att en människa behöver logga in.
+
+Det är grundlogiken i growth loopen vi bygger. Data in till ett datalager, beslut ut via API*(tooltip)*-anrop. Meta Ads är en av de första kontrolleringsytorna.
+
+## Hur vi tänkte
+
+Det första beslutet var enkelt: allt som kan göras manuellt i Ads Manager kan återskapas via API*(tooltip)*. Den omvända slutsatsen är viktigare – allt som skapas via API*(tooltip)* kan versionshanteras och till slut delegeras.
+
+Det andra beslutet gällde namnkonventionen. Ett kampanjnamn som `c_flo_swe_init_dogowner_inst_h01_cid001` ser tekniskt ut men är egentligen en data-rad. Varumärke, land, fas, målgrupp, mål, hook och kampanj-ID är kodade direkt i strängen. En BigQuery*(tooltip)*-fråga kan gruppera, filtrera och jämföra utan att behöva koppla mot ett externt system.
+
+Det tredje beslutet var att börja smalt. Inte ett generiskt ramverk, utan ett script per operation: ett för kampanj, ett för videouppladdning, ett för att skapa annonser, ett för att aktivera. Composable delar som kan köras i sekvens eller anropas enskilt – ett system som kan utökas utan att ritas om.
+
+## Vad vi skapade
+
+Systemet bygger på en hierarki med tre nivåer: kampanj, annonsgrupp och annons. Varje nivå skapas som pausad och aktiveras manuellt efter verifiering. Det är en säkerhetsventil som hindrar ett buggy script från att lägga ut annonser med fel targeting.
+
+Namnkonventionen bär metadata i tre lager. Kampanjnamnet kodar varumärke, land, fas och mål. Annonsgruppens namn kodar koncept och optimeringsmål. Annonsens namn kodar hook, kreativbas, copyvariant och format. Strukturen är läsbar för människor och analyserbar för system.
+
+Scripten hanterar hela flödet: skapa kampanjstruktur, ladda upp video via multipart-upload, hämta thumbnail, skapa creatives och aktivera i rätt ordning. Allt lever i separata `.js`-filer i repot – aldrig inline i terminalen, vilket var en av de första hårda lärdomarna.
+
+UTM*(tooltip: UTM)*-parametrarna är standardiserade och medföljer varje annons-URL. Det gör att GA4*(tooltip)* och BigQuery*(tooltip)* kan koppla en session till en specifik annonsvariant, inte bara till "meta/paid_social" som kanal.
+
+## Resultat och lärdomar
+
+Kampanjen levererade CTR*(tooltip: CTR)* på 4,76 procent mot branschstandard på 1–2 procent. CPC*(tooltip: CPC)* landade på 2,08 kronor mot ett normalintervall på 5–20 kronor. Datamängden är liten men signalen är tydlig nog för att forma nästa hypotes.
+
+Första setup-sessionen tog åtta timmar. Nästa tar uppskattningsvis två. Det är dokumentationens verkliga värde – inte att det sparar tid, utan att det gör processen reproducerbar oavsett vem eller vad som kör den.
+
+Tre lärdomar var inte uppenbara från start.
+
+**App Promotion som kampanjmål** krävde beroenden vi inte hade på plats. Vi bytte till Traffic-mål med landing page views som optimeringsmål. Resultatet blev detsamma – trafik till landningssida och vidare till app store – men med hälften så många rörliga delar.
+
+**DCO*(tooltip: DCO)*** fungerar inte stabilt via API. Meta:s funktion för att kombinera texter och bilder dynamiskt genererade konsekvent fel. Vi skapade separata annonser per copyvariant i stället. Det innebär mer att hålla reda på men ger renare analys – varje annons är sin egna hypotes.
+
+**Budget ska alltid sättas på annonsgruppsnivå**, inte kampanjnivå. Omvänt skapar en konflikt med Meta:s budstrategi som genererar kryptiska felmeddelanden utan tydlig koppling till det verkliga problemet.
+
+:::nexttreshold[Nästa tröskel]
+Strukturen är på plats för ett automatiserat optimeringslöp. Nästa steg är att koppla BigQuery*(tooltip)*-data mot scripten: ett dagligt jobb läser prestanda per annonsvariant, pausar de som underperformar och skalar de som vinner. Männsikan sätter gränsvärden och godkänner changes – men manuella Ads Manager-sessioner hör till det vi vill fasa ut.
+:::
+
+## Hur vi går vidare
+
+Närmaste steget är att koppla UTM*(tooltip: UTM)*-data från BigQuery*(tooltip)* mot kampanjprestanda. Det ger en bild Meta:s egna rapporter inte kan ge: vilka annonsvarianter som driver faktiska installationer och inte bara landningssidebesök.
+
+På längre sikt är målet att AI läser BigQuery*(tooltip)*, identifierar vinnare och skriver ändringar via Meta API*(tooltip)*. Inte för att eliminera mänsklig bedömning – utan för att flytta den från operativt pys till strategiska val. Vilken hook testas härnäst, vilket segment är outnyttjat, när är det rätt att skala.
+
+## Verktyg i den här processen
+
+- **Meta Marketing API v21.0** – Hela kampanjstrukturen skapas och hanteras via API*(tooltip)*. Ads Manager används enbart för visuell verifiering.
+- **Node.js scripts** – Ett script per operation, versionshanterade i repot. Körs sekventiellt vid ny kampanjlansering.
+- **BigQuery*(tooltip)*** – Tar emot GA4*(tooltip)*-export och UTM*(tooltip: UTM)*-taggad trafik. Grunden för framtida automatiserad analys.
+- **Cursor / Claude Sonnet** – Designade scriptstrukturen, debuggade API-fel och identifierade mönster i prestanda-data.

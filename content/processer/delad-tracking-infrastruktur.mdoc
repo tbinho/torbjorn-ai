@@ -1,0 +1,72 @@
+---
+titel: "Mätning som plattform – en tracking-infrastruktur som skalas horisontellt"
+sammanfattning: >-
+  De flesta team bygger om tracking från grunden för varje ny produkt. Vi
+  byggde en delad infrastruktur i stället – en GTM-container, ett BigQuery-
+  projekt och ett server-side lager som alla produkter delar. Tredje produkten
+  kostar nästan ingenting att koppla in.
+kluster: tracking-data-analys
+status: aktiv
+skapad: 2026-03-06
+uppdaterad: 2026-03-06
+---
+
+De flesta tracking-setups byggs per projekt. Projekt ett tar tre veckor. Projekt två tar nästan lika lång tid. Projekt tre likaså. Varje gång börjar man i princip om, med lite erfarenhet men lite hjälp av det som redan finns.
+
+Vi valde en annan väg tidigt. I stället för ett tracking-system per produkt byggde vi en plattform som produkterna pluggar in i. Det gör varje nytt tillägg billigare och ger något mer värdefullt på sikt: data med samma schema och samma namnkonventioner, samlad på ett ställe.
+
+## Vad vi ville uppnå
+
+Det kortsiktiga målet var fungerande mätning för varje produkt. Men vi lade beslutet om struktur innan vi hade mer än ett projekt, just för att det är lättare att bygga rätt en gång än att migrera tre system till en gemensam standard.
+
+Det vi optimerade för på lång sikt är analyserbarhet. När data från webb, app och betalda kanaler hamnar i samma datalager med samma schema kan man ställa frågor som annars kräver manuell ihopslagning. Vilken kanal driver installationer, inte bara klick? Hur ser resan ut från första webbesök till aktivt app-användande? Det är frågor ett fragmenterat system aldrig kan svara på.
+
+Infrastrukturen är också ett fundament för AI-styrda beslut. Innan AI*(tooltip)* kan agera på data måste data vara samlad, enhetlig och tillgänglig. Det bygger man inte i efterhand.
+
+## Hur vi tänkte
+
+Det första arkitekturbeslutet var om GTM*(tooltip)*: en container per produkt eller en delad. En container per produkt är enklare att förstå men kräver duplicerat arbete för varje setup och varje uppdatering. En delad container med hostname-baserad routing kräver lite mer initialt tänk men betalar av sig direkt vid andra produkten.
+
+Hostname-routing innebär att varje tagg i GTM*(tooltip)* har ett trigger-villkor som kontrollerar vilket domännamn sidan laddas från. Flocken-taggar triggas bara på `flocken.info`, Nästahem-taggar bara på `nastahem.com`. Samma container, separerat beteende. Att lägga till ett tredje projekt tar minuter.
+
+Det andra beslutet gällde BigQuery*(tooltip)*. Vi valde ett delat Google Cloud-projekt med dataset-namngivning per produkt: `flocken_raw`, `flocken_curated`, `flocken_marts` och motsvarande för varje produkt. Det ger full separation utan att splittra behörigheter, kostnadshantering och scheman över flera projekt.
+
+Det tredje beslutet var server-side tagging*(tooltip: serverSideTagging)*. Det konfigurerades en gång och gäller alla produkter. Server-side-lagret förbättrar datakvaliteten, minskar påverkan av ad blockers och gör GDPR*(tooltip)*-compliance enklare att hantera centralt.
+
+## Vad vi skapade
+
+GTM*(tooltip)*-container `GTM-PD5N4GT3` är den delade web-containern. Varje produkts GA4*(tooltip)*-konfiguration lever som en separat tagg med ett hostname-villkor. Triggers är produktspecifika – ett event som triggas på `flocken.info` skickar data till Flockens GA4-property och ingenstans annars.
+
+Server-containern `GTM-THB49L3K` kör på `gtm.nastahem.com` och hanterar server-side GA4-insamling för alla produkter. Consent Mode v2*(tooltip: ConsentMode)* är konfigurerat i web-containern och gäller globalt – ett beslut som ger alla produkter GDPR*(tooltip)*-compliant mätning utan att behöva implementeras separat.
+
+BigQuery*(tooltip)*-projektet `nastahem-tracking` tar emot GA4*(tooltip)*-export för samtliga produkter. Varje produkt har tre datasets i en standardiserad tredelad struktur. `_raw` innehåller rå GA4-export direkt från Googles exportpipeline. `_curated` innehåller processade events med standardiserade fält. `_marts` innehåller affärsfärdiga aggregat för dashboards och analys.
+
+Varje GA4*(tooltip)*-property är konfigurerad med en property per produkt och separata data streams per plattform – webb, Android och iOS. Det innebär att samma property håller hela användarresan när appen är i produktion, i stället för att data fragmenteras i separata properties per kanal.
+
+## Resultat och lärdomar
+
+När Flocken lades till som andra produkt var GTM*(tooltip)*, server-containern och BigQuery*(tooltip)* redan i drift. Arbetet bestod i att lägga till hostname-villkor och skapa produktens datasets – ingenting mer. Det tog ett par timmar mot uppskattade dagar om vi startat från noll.
+
+Namnkonventionen i BigQuery*(tooltip)* visade sig vara viktigare än vi förutsett. När man skriver queries mot `flocken_raw.events_*` och `nastahem_raw.events_*` behöver man aldrig undra vilket system data kommer från. Det minskar friktionen i analys och gör det möjligt att jämföra produkter i samma query.
+
+En lärdom var att Google Clouds regions-inställningar måste vara konsekventa från start. Vi valde EU-regionen för GDPR*(tooltip)*-compliance, men GA4-exporten måste konfigureras mot samma region som BigQuery*(tooltip)*-dataseten. En felmatch genererar fel som inte är intuitiva och tog tid att felsöka.
+
+Att köra server-side GTM*(tooltip)* kostar något per månad. Men kostnaden delas av alla produkter och är linjär snarare än multiplicerande – ett projekt till ändrar inte priset nämnvärt.
+
+:::nexttreshold[Nästa tröskel]
+Infrastrukturen är på plats men cross-platform-analysen väntar på att apparna är i produktion. När Firebase*(tooltip)* kopplas in för iOS och Android kommer `_curated`-lagret att hålla hela användarresan – från första webbesök via Meta-annons till aktivt app-användande. Det är när frågorna om attribution och faktisk tillväxt kan besvaras med data i stället för antaganden.
+:::
+
+## Hur vi går vidare
+
+Närmaste steget är att koppla in det tredje projektet – torbjorn-ai – i samma infrastruktur. GA4-property skapas, en ny hostname-trigger läggs till i GTM*(tooltip)* och ett nytt dataset-set skapas i BigQuery*(tooltip)*. Strukturen är ritad för det.
+
+På längre sikt är målet att `_marts`-lagret håller tillräckligt med data för att AI*(tooltip)* ska kunna identifiera mönster tvärs produkter. Vilka kanaler driver engagemang som håller, inte bara nedladdningar? Finns det segment som beter sig likadant i Flocken och Nästahem? Det är analysen som kräver en gemensam grund – och den grunden är det vi lagt.
+
+## Verktyg i den här processen
+
+- **Google Tag Manager GTM-PD5N4GT3** – Delad web-container med hostname-routing. Alla produkters tags och triggers lever här.
+- **GTM Server Container GTM-THB49L3K** – Server-side tagging*(tooltip: serverSideTagging)* på `gtm.nastahem.com`. Hanterar GA4*(tooltip)*-insamling och Consent Mode v2*(tooltip: ConsentMode)*.
+- **BigQuery*(tooltip)* `nastahem-tracking`** – Delat datalager med produktprefixade datasets i standardiserad raw/curated/marts-struktur.
+- **GA4*(tooltip)*** – En property per produkt med separata data streams för webb och app.
+- **Cursor / Claude Sonnet** – Designade arkitekturbeslutet, konfigurerade routing-logik och byggde dataset-strukturen.

@@ -170,13 +170,21 @@ git push origin main   # backup
 git push raquel main   # triggar Vercel-deploy
 ```
 
-### Credentials för raquel-remote
+### Credentials för deploy (non-interactive)
 
-`git push raquel main` kräver RaquelSandblads GitHub-credentials.
-Windows Credential Manager cachas dessa efter första inloggningen.
+Bakgrundsterminaler kan inte visa GUI-credential-dialogen. Använd inbäddade tokens direkt i URL:en:
 
-Om det frågar om credentials: använd ett Personal Access Token (PAT) med scope `repo`
-skapat på RaquelSandblads GitHub-konto (Settings → Developer settings → Tokens).
+```powershell
+# Hämta cachade tokens från Windows Credential Manager:
+"protocol=https`nhost=github.com`nusername=tbinho`n" | git credential fill
+"protocol=https`nhost=github.com`nusername=RaquelSandblad`n" | git credential fill
+
+# Pusha med inbäddad token:
+git push "https://tbinho:<TOKEN>@github.com/tbinho/torbjorn-ai.git" main
+git push "https://RaquelSandblad:<TOKEN>@github.com/RaquelSandblad/torbjorn-ai.git" main
+```
+
+Tokens cachas i Windows Credential Manager och hämtas med `git credential fill` ovan.
 
 ### Domän & DNS
 
