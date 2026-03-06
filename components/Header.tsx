@@ -22,16 +22,14 @@ export function Header() {
             href="/"
             className="flex items-center gap-2.5 font-display text-lg text-text hover:text-accent transition-colors"
           >
-            {pathname !== '/' && (
-              <Image
-                src="/torbjorn_ai_hero_comics.jpg"
-                alt=""
-                width={32}
-                height={32}
-                className="rounded-sm"
-              />
-            )}
-            Torbjörn Sandblad
+            <Image
+              src="/torbjorn_ai_hero_comics.jpg"
+              alt="Torbjörn Sandblad"
+              width={32}
+              height={32}
+              className="rounded-sm flex-shrink-0"
+            />
+            <span className="hidden md:inline">Torbjörn Sandblad</span>
           </Link>
 
           {/* Navigation */}

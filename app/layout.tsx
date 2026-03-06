@@ -4,11 +4,11 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Torbjörn Sandblad – AI i praktiken',
-  description: 'Hur jag arbetar med AI inom marknad, growth, data och automation. Dokumenterade processer och verkliga resultat.',
+  title: 'Praktiska AI-case med Torbjörn Sandblad',
+  description: 'Torbjörns AI-sajt beskriver praktiska case. Hur AI använts konkret för att skapa värde i marknadsföring och företagsbyggande.',
   openGraph: {
-    title: 'Torbjörn Sandblad – AI i praktiken',
-    description: 'Hur jag arbetar med AI inom marknad, growth, data och automation.',
+    title: 'Praktiska AI-case med Torbjörn Sandblad',
+    description: 'Torbjörns AI-sajt beskriver praktiska case. Hur AI använts konkret för att skapa värde i marknadsföring och företagsbyggande.',
     type: 'website',
   },
 }
