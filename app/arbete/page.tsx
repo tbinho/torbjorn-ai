@@ -100,11 +100,8 @@ function ProcessCard({
   return (
     <article className="process-card group">
       {/* Meta */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-start mb-4">
         <span className="kluster-tag">{klusterNamn[kluster]}</span>
-        <span className={`status-badge status-badge--${status}`}>
-          {status}
-        </span>
       </div>
 
       {/* Content */}

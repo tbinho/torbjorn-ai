@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
@@ -19,8 +20,17 @@ export function Header() {
           {/* Logo / Namn */}
           <Link
             href="/"
-            className="font-display text-lg text-text hover:text-accent transition-colors"
+            className="flex items-center gap-2.5 font-display text-lg text-text hover:text-accent transition-colors"
           >
+            {pathname !== '/' && (
+              <Image
+                src="/torbjorn_ai_hero_comics.jpg"
+                alt=""
+                width={32}
+                height={32}
+                className="rounded-sm"
+              />
+            )}
             Torbjörn Sandblad
           </Link>
 

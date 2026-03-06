@@ -12,8 +12,6 @@ uppdaterad: 2026-02-20
 
 System som Klaviyo kostar skjortan och det går att bygga mycket av funktionaliteten själv. Med MailerSend, Supabase och AI som skriver innehållet via API*(tooltip)* har vi byggt en epostautomation på gratisversionen av en ESP*(tooltip)* som är helt under vår kontroll.
 
----
-
 ## Vad vi ville uppnå
 
 Quizplattformen på quiz.flocken.info är ett eget byggprojekt som vi återkommer till, men den har börjat dra trafik. Hundägare gör ett quiz, ser sina resultat och lämnar. Det enda som saknades var ett sätt att ta vara på den uppmärksamheten innan den försvann.
@@ -25,8 +23,6 @@ En epostlista ger en direktkanal som inte är beroende av algoritmerna på Meta 
 Ett välkomstmejl som skickas omedelbart bygger en vana hos mottagaren att öppna mejl från oss, vilket är avgörande för leveransbarhet på sikt.
 
 Att bygga en epostlista kan tyckas förlegat. Men faktum är att det fortfarande är en viktig kanal eftersom alla har minst en mejladress de använder aktivt. Rätt använd kan den bli en värdefull tillgång.
-
----
 
 ## Hur vi tänkte
 
@@ -41,8 +37,6 @@ När quizproduktionen är automatiserad kan nya quiz genereras och läggas direk
 
 Det är en fullt realistisk vision, men kräver en genomarbetad skrivguide för quizen med guard rails för att undvika faktafel.
 :::
-
----
 
 ## Vad vi skapade
 
@@ -60,8 +54,6 @@ Flödet är enkelt: formuläret skickar adressen till en API*(tooltip)*-route so
 
 **MailerSend** hanterar själva utskicket. Avsändardomain är `email.flocken.info`, vilket krävde DNS*(tooltip)*-poster i Vercel. Mailutskicket sker via direkt API-anrop med HTML-innehållet inbäddat, inte via MailerSends template-system.
 
----
-
 ## Resultat och lärdomar
 
 Systemet fungerar. Formuläret tar emot adresser, Supabase lagrar dem och välkomstmejlet landar inom sekunder.
@@ -74,15 +66,11 @@ Beslutet att skriva HTML i kod visade sig vara rätt av en anledning vi inte had
 
 Att dela Supabase-projekt med andra interna tjänster sparade en hel databaskostnad. Konventionen att prefixa tabeller med `flocken_` håller separationen tydlig, och vi undvek en extra månadskostnad för ett separat databasprojekt.
 
----
-
 ## Hur vi går vidare
 
 Närmaste steget är att fylla mejlkön med planerade utskick. Dag 3 kan innehålla ett annat quiz, dag 7 ett tips om Flocken-appen. Det är en e-postsekvens byggd på vår egen infrastruktur, utan ett externt automation-verktyg.
 
 På längre sikt vill vi tracka öppningsfrekvens och klick via MailerSends webhook*(tooltip)*-API och lagra det i BigQuery*(tooltip)*. Det ger möjligheten att koppla mejlengagemang till app-installationer och se om epostlistan faktiskt driver nedladdningar.
-
----
 
 ## Verktyg i den här processen
 

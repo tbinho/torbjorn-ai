@@ -108,6 +108,10 @@ a:hover {
   @apply list-decimal;
 }
 
+.prose hr {
+  display: none;
+}
+
 .prose blockquote {
   @apply pl-6 border-l-2 border-accent/30 italic text-text-muted my-6;
 }

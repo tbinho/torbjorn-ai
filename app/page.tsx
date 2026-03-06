@@ -1,25 +1,39 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HomePage() {
   return (
     <div className="container-narrow py-16 md:py-24">
       {/* Hero */}
       <section className="mb-20">
-        <h1 className="mb-6">
-          AI förändrar hur arbete<br />
-          kan utföras
-        </h1>
-        <p className="text-xl text-text-muted max-w-lg mb-8">
-          Jag dokumenterar hur jag praktiskt använder AI inom marknad, data,
-          automation och företagsbyggande. Inte teori – verkligt arbete.
-        </p>
-        <Link
-          href="/arbete"
-          className="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent-hover transition-colors"
-        >
-          Se hur jag arbetar
-          <span aria-hidden="true">→</span>
-        </Link>
+        <div className="flex flex-col-reverse md:flex-row md:items-center md:gap-14">
+          <div className="flex-1 mt-8 md:mt-0">
+            <h1 className="mb-6">
+              AI förändrar hur arbete<br />
+              kan utföras
+            </h1>
+            <p className="text-xl text-text-muted max-w-lg mb-8">
+              Jag dokumenterar hur jag praktiskt använder AI inom marknad, data,
+              automation och företagsbyggande. Inte teori – verkligt arbete.
+            </p>
+            <Link
+              href="/arbete"
+              className="inline-flex items-center bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent-hover transition-colors"
+            >
+              Se mitt arbete
+            </Link>
+          </div>
+          <div className="flex-shrink-0 flex justify-center md:justify-end">
+            <Image
+              src="/torbjorn_ai_hero_comics.jpg"
+              alt="Torbjörn Sandblad"
+              width={260}
+              height={260}
+              className="rounded-2xl shadow-sm w-[160px] h-[160px] md:w-[260px] md:h-[260px]"
+              priority
+            />
+          </div>
+        </div>
       </section>
 
       {/* Intro */}
@@ -58,19 +72,6 @@ export default function HomePage() {
             title="Beslutsstöd & prioritering"
             description="Hur AI hjälper mig resonera, prioritera och fatta bättre beslut."
           />
-        </div>
-      </section>
-
-      {/* Placeholder för bild */}
-      <section className="mb-20">
-        <div className="aspect-[16/9] bg-base-subtle rounded-lg border border-border flex items-center justify-center">
-          <div className="text-center text-text-muted">
-            <p className="text-sm uppercase tracking-wide mb-2">Placeholder</p>
-            <p className="text-xs max-w-xs">
-              Hero-bild: arbetsplats med laptop, naturligt ljus,
-              varm känsla, professionell men mänsklig
-            </p>
-          </div>
         </div>
       </section>
 

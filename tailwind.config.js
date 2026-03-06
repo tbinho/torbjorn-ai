@@ -33,7 +33,7 @@ module.exports = {
         'mono': ['JetBrains Mono', 'Consolas', 'monospace'],
       },
       maxWidth: {
-        'content': '680px',
+        'content': '780px',
         'wide': '1024px',
       },
     },
