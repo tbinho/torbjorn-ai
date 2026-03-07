@@ -1,7 +1,7 @@
 ---
-titel: "Annonsering utan Ads Manager – ett system redo för AI-styrning"
+titel: "Annonsering utan Meta Ads Manager – ett system redo för AI-styrning"
 sammanfattning: >-
-  Ads Manager kräver en manuell session för varje optimering – det är en
+  Meta Ads Manager kräver en manuell session för varje optimering – det är en
   flaskhals i allt som kan automatiseras. Vi hanterar Meta Ads via API och
   scripts i stället, med en namnkonvention som gör kampanjdata direkt
   analyserbar i BigQuery.
@@ -11,74 +11,74 @@ skapad: 2026-03-06
 uppdaterad: 2026-03-07
 ---
 
-Den första versionen av kampanjupplägget var helt manuellt. Canva, ett Google Doc med copy, uppladdning via Ads Manager. Inte för att vi inte kunde använda API*(tooltip)* – vi hade redan byggt en första API-setup och aktivt valt att pausa den. Anledningen: vi automatiserade innan vi förstod vad vi automatiserade.
+Den första versionen av kampanjupplägget var helt manuellt. Canva, ett Google Doc med copy, uppladdning via Ads Manager. Inte för att vi inte kunde använda API*(tooltip)*, vi hade redan byggt en första API-setup och aktivt valt att pausa den. Vi automatiserade innan vi förstod vad vi automatiserade.
 
-Vi tog ett steg tillbaka. Jobbade manuellt, förstod hur Meta:s algoritmer faktiskt fungerar, testade vinklar, och fattade besluten vi behövde fatta. Sedan byggde vi om API-strukturen – inte som en kopia av den första, utan med riktig kunskap bakom varje val.
+Vi tog ett steg tillbaka. Jobbade manuellt, förstod hur Metas algoritmer faktiskt fungerar, testade vinklar och fattade besluten vi behövde fatta. Sedan byggde vi om API-strukturen, inte som en kopia av den första, utan med riktig kunskap bakom varje val.
 
 Det är skillnaden mellan att bygga snabbare och att bygga rätt.
 
 ## Vad vi ville uppnå
 
-Det handlar inte om att spara tid på att skapa en enskild kampanj. Ads Manager fungerar – det är inte problemet.
+Det handlar inte om att spara tid på att skapa en enskild kampanj. Meta Ads Manager fungerar, det är inte problemet.
 
-Problemet är att Ads Manager kräver en manuell session varje gång något ska pausas, justeras eller lanseras. Det är en flaskhals för allt som ska kunna automatiseras – och det stänger ute AI:n helt från att agera.
+Problemet är att Meta Ads Manager kräver en manuell session varje gång något ska pausas, justeras eller lanseras. Det är en flaskhals för allt som ska kunna automatiseras och det stänger ute AI:n helt från att agera.
 
-Om varje annons lever som ett skriptobjekt, om kampanjnamn bär kodad metadata och om all prestanda flödar till BigQuery*(tooltip)* – då kan ett system läsa data och skriva tillbaka ändringar utan att en människa behöver logga in. Det är grundlogiken i growth loopen vi bygger. Data in, beslut ut via API*(tooltip)*-anrop.
+När varje annons är ett skriptobjekt och kampanjdata flödar till BigQuery*(tooltip)* kan ett system läsa prestanda och skriva tillbaka ändringar utan att en människa behöver logga in. Det är grunden i den growth loop vi bygger, ett automatiserat system där data driver beslut och beslut går tillbaka ut som API-anrop.
 
-Men det förutsätter att strukturen är byggd för det. En API-setup som speglar gamla Ads Manager-vanor automatiserar ingenting av värde.
+Men det förutsätter att strukturen är byggd för det. En API-setup som speglar gamla Meta Ads Manager-vanor automatiserar ingenting av värde.
 
 ## Hur vi tänkte
 
 Det viktigaste beslutet handlade egentligen om kreativ strategi, inte teknik.
 
-Metas targeting har tappat upplösning. iOS och privacy-förändringar innebär att algoritmerna får färre signaler om vem som är rätt person. Konsekvensen är att det kreativa materialet nu gör en del av jobbet som targeting brukade göra. Olika vinklar i annonseringen är inte bara kreativ variation – de är hur Meta identifierar olika segmenten.
+Meta har allt svårare att avgöra vem som är rätt person att visa annonsen för. iOS och privacy-förändringar innebär att algoritmerna får färre signaler. Konsekvensen är att det kreativa materialet nu gör en del av jobbet som targeting brukade göra. Olika vinklar i annonseringen är inte bara kreativ variation, de avgör hur Meta identifierar olika segment.
 
-En "vinkel" i det här sammanhanget är inte en ny rubrik på samma annons. Det är ett skifte i vilket problem som är i centrum, vilken situation personen befinner sig i och vilken emotion som driver klicket. Byter du inte problemformulering byter du inte vinkel. Och utan riktiga vinklar ger du Meta ingenting att jobba med.
+En "vinkel" i det här sammanhanget är inte en ny rubrik på samma annons. Det är ett skifte i vilket problem som är i centrum, vilken situation personen befinner sig i och vilken känsla som driver klicket. Byter du inte problemformulering byter du inte vinkel. Och utan riktiga vinklar ger du inte Meta någonting att jobba med.
 
-Det beslutet formade hur API-strukturen designades. Varje annons är sin egen hypotes. Inte ett kreativt byggblock som Meta kombinerar fritt, utan ett komplett påstående om ett specifikt problem och en specifik person.
+Det beslutet formade hur API-strukturen designades. Varje annons är sin egen hypotes, inte ett kreativt byggblock som Meta kombinerar fritt, utan ett komplett påstående om ett specifikt problem och en specifik person.
 
-Det andra beslutet gällde namnkonventionen. Ett kampanjnamn som `c_flo_swe_init_dogowner_inst_h01_cid001` ser tekniskt ut men är egentligen en data-rad. Varumärke, land, fas, målgrupp, mål, hypotesnummer och kampanj-ID är kodade direkt i strängen. Hypotesnumret bär en extra dimension: `H01`, `H02` är strategiska hypoteser som bara en människa ska ändra. Bokstavsvarianter (`A`, `B`) är taktiska justeringar inom en hypotes – det är nivån som ett system kan ändra autonomt.
+Det andra beslutet gällde namnkonventionen. Ett kampanjnamn som `c_flo_swe_init_dogowner_inst_h01_cid001` ser tekniskt ut men är egentligen en datarad. Varumärke, land, fas, målgrupp, mål, hypotesnummer och kampanj-ID är kodade direkt i strängen. Hypotesnumret bär en extra dimension. H01 och H02 är strategiska hypoteser som bara en människa ska ändra. Bokstavsvarianter (A, B) är taktiska justeringar inom en hypotes, det är nivån som ett system kan ändra autonomt.
 
-Det tredje beslutet var att börja smalt. Inte ett generiskt ramverk, utan ett script per operation: ett för kampanj, ett för videouppladdning, ett för att skapa annonser, ett för att aktivera. Composable delar som kan köras i sekvens eller anropas enskilt – ett system som kan utökas utan att ritas om.
+Det tredje beslutet var att börja smalt. Inte med ett generiskt ramverk, utan ett script per operation. Fristående delar som kan köras i sekvens eller anropas enskilt, ett system som kan utökas utan att ritas om.
 
 ## Vad vi skapade
 
-Systemet bygger på en hierarki med tre nivåer: kampanj, annonsgrupp och annons. Varje nivå skapas som pausad och aktiveras manuellt efter verifiering. Det är en säkerhetsventil som hindrar ett buggy script från att lägga ut annonser med fel targeting.
+Systemet bygger på en hierarki med tre nivåer, kampanj, annonsgrupp och annons. Varje nivå skapas som pausad och aktiveras manuellt efter det har godkänts. Det är en viktig säkerhetsventil, i alla fall i uppstarten, för att undvika att undermåliga annonser slinker igenom.
 
 Namnkonventionen bär metadata i tre lager. Kampanjnamnet kodar varumärke, land, fas och mål. Annonsgruppens namn kodar koncept och optimeringsmål. Annonsens namn kodar hook, kreativbas, copyvariant och format. Strukturen är läsbar för människor och analyserbar för system.
 
-Scripten hanterar hela flödet: skapa kampanjstruktur, ladda upp video via multipart-upload, hämta thumbnail, skapa creatives och aktivera i rätt ordning. Allt lever i separata `.js`-filer i repot – aldrig inline i terminalen, vilket var en av de första hårda lärdomarna.
+Scripten hanterar hela flödet genom att skapa kampanjstruktur, ladda upp video, hämta thumbnail, skapa kreativa annonser och aktivera det hela i rätt ordning. Allt lever i separata `.js`-filer i repot, aldrig direkt i terminalen, vilket var en av de första hårda lärdomarna.
 
-UTM*(tooltip: UTM)*-parametrarna är standardiserade och medföljer varje annons-URL. Det gör att GA4*(tooltip)* och BigQuery*(tooltip)* kan koppla en session till en specifik annonsvariant, inte bara till "meta/paid_social" som kanal.
+UTM*(tooltip: UTM)*-parametrarna är standardiserade och medföljer varje annons-URL. Det gör att GA4*(tooltip)* och BigQuery kan koppla en session till en specifik annonsvariant, inte bara till "meta/paid_social" som kanal.
 
 ## Resultat och lärdomar
 
 Kampanjen levererade resultat som bekräftade riktningen. Datamängden är liten men signalen är tillräcklig för att forma nästa hypotes.
 
-Det verkliga värdet av den genomarbetade setupen visade sig inte i att första körningen var snabb – det var den inte. Det visade sig i att nästa körning kan göras av vem eller vad som helst, med samma struktur och utan att börja om.
+Det verkliga värdet av den genomarbetade setupen visade sig inte i att första körningen var snabb, det var den inte. Det visade sig i att nästa körning kan göras av vem eller vad som helst, med samma struktur och utan att börja om.
 
-Tre lärdomar var inte uppenbara från start.
+Tre saker visade sig fungera annorlunda än förväntat.
 
-**Dynamic Creative fungerar annorlunda än vi trodde.** DCO*(tooltip: DCO)* via API genererade konsekvent fel. Men den egentliga insikten var djupare: klassisk Dynamic Creative – där Meta kombinerar dina assets fritt inom en annons – har ersatts av ett nytt mönster. Istället för att ge Meta byggblock att leka med kör du separata annonser med distinkta vinklar och låter Meta bestämma vem som ser vilken. Dynamic Creative har i praktiken förflyttats från *inom annonsen* till *mellan annonserna*. Det är därför separata annonser per copyvariant ger renare analys – varje annons är sin egna hypotes.
+**Dynamic Creative*(tooltip: DCO)* fungerar annorlunda än vi trodde.** DCO via API genererade konsekvent fel. Men den egentliga insikten var djupare. Klassisk Dynamic Creative, där Meta kombinerar dina material fritt inom en annons, har ersatts av ett nytt mönster. Istället för att ge Meta byggblock att leka med kör du separata annonser med distinkta vinklar och låter Meta bestämma vem som ser vilken. Dynamic Creative har i praktiken förflyttats från inom annonsen till mellan annonserna. Det är därför separata annonser per copyvariant ger renare analys, varje annons är sin egna hypotes.
 
-**App Promotion som kampanjmål** krävde beroenden vi inte hade på plats. App-SDK:n var inte integrerad, inga in-app events nådde Meta. Utan dem optimerar App Promotion mot fel sak. Vi bytte till Traffic-mål med landing page views som optimeringsmål – samma destination, hälften så många rörliga delar, och en struktur vi kan migrera till App Promotion när tracking är på plats.
+**App Promotion som kampanjmål** krävde beroenden vi inte hade på plats. App-SDK:n var inte integrerad, inga in-app events nådde Meta. Utan dem optimerar App Promotion mot fel sak. Vi bytte till trafikmål med visning av landningssida som optimeringsmål, samma destination, men med hälften så många rörliga delar och en struktur som kan användas för App Promotion när spårningen är på plats.
 
-**Budget ska alltid sättas på annonsgruppsnivå**, inte kampanjnivå. Omvänt skapar en konflikt med Meta:s budstrategi som genererar kryptiska felmeddelanden utan tydlig koppling till det verkliga problemet.
+**Budget ska alltid sättas på annonsgruppsnivå**, inte kampanjnivå. Omvänt skapar en konflikt med Metas budstrategi som genererar kryptiska felmeddelanden utan tydlig koppling till det verkliga problemet. Det var i alla fall vår erfarenhet i testet.
 
-:::nexttreshold[Nästa tröskel]
-Strukturen är på plats för ett automatiserat optimeringslöp. Nästa steg är att koppla BigQuery*(tooltip)*-data mot scripten: ett dagligt jobb läser prestanda per annonsvariant, pausar de som underperformar och skalar de som vinner. Människan sätter gränsvärden och godkänner changes – men manuella Ads Manager-sessioner hör till det vi vill fasa ut.
-:::
+## Fortsatt utveckling
+
+Grunden är lagd för att automatisera optimeringen. Nästa steg är att koppla ihop BigQuery med scripten så att en daglig automatiserad körning analyserar hur varje annonsvariant presterar, stänger av de som inte levererar och ökar budgeten på de som vinner. Människan sätter gränserna och godkänner besluten, men det manuella arbetet i Meta Ads Manager är något vi vill minska kraftigt på sikt.
 
 ## Hur vi går vidare
 
-Närmaste steget är att koppla UTM*(tooltip: UTM)*-data från BigQuery*(tooltip)* mot kampanjprestanda. Det ger en bild Meta:s egna rapporter inte kan ge: vilka annonsvarianter som driver faktiska installationer och inte bara landningssidebesök.
+Nästa steg är att koppla UTM-data från BigQuery mot kampanjprestanda. Det ger en bild som Metas egna rapporter inte kan ge över vilka annonsvarianter som driver faktiska installationer och inte bara landningssidebesök.
 
-På längre sikt är målet att AI läser BigQuery*(tooltip)*, identifierar vinnare och skriver ändringar via Meta API*(tooltip)*. Inte för att eliminera mänsklig bedömning – utan för att flytta den från operativt pys till strategiska val. Vilken hook testas härnäst, vilket segment är outnyttjat, när är det rätt att skala.
+På längre sikt är målet att AI läser BigQuery, identifierar vinnare och uppdaterar annonser via Meta API*(tooltip: MetaAPI)*. Inte för att eliminera mänsklig bedömning, utan för att korta ner ledtiderna mellan analys och att agera på insikter som kommer från data. AI ska kunna ta beslut om vilken hook som testas härnäst, vilket segment som är outnyttjat och när det är rätt att skala.
 
 ## Verktyg i den här processen
 
-- **Meta Marketing API v21.0** – Hela kampanjstrukturen skapas och hanteras via API*(tooltip)*. Ads Manager används enbart för visuell verifiering.
+- **Meta Marketing API** – Hela kampanjstrukturen skapas och hanteras via API. Ads Manager används enbart för visuell verifiering.
 - **Node.js scripts** – Ett script per operation, versionshanterade i repot. Körs sekventiellt vid ny kampanjlansering.
-- **BigQuery*(tooltip)*** – Tar emot GA4*(tooltip)*-export och UTM*(tooltip: UTM)*-taggad trafik. Grunden för framtida automatiserad analys.
-- **ChatGPT** – Deep research om Meta:s algoritmlogik, Dynamic Creative och kampanjstruktur för tidig fas med begränsad budget och saknad app-tracking.
+- **BigQuery** – Tar emot GA4-export och UTM-taggad trafik. Grunden för framtida automatiserad analys.
+- **ChatGPT** – Deep research om Metas algoritmlogik, Dynamic Creative och kampanjstruktur för tidig fas med begränsad budget och saknad app-tracking.
 - **Cursor / Claude Sonnet** – Designade scriptstrukturen, debuggade API-fel och identifierade mönster i prestanda-data.
