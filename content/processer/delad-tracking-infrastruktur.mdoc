@@ -45,7 +45,7 @@ Varje GA4*(tooltip)*-property är konfigurerad med en property per produkt och s
 
 ## Resultat och lärdomar
 
-När Flocken lades till som andra produkt var GTM*(tooltip)*, server-containern och BigQuery*(tooltip)* redan i drift. Arbetet bestod i att lägga till hostname-villkor och skapa produktens datasets – ingenting mer. Det tog ett par timmar mot uppskattade dagar om vi startat från noll.
+När Flocken lades till som andra produkt var GTM*(tooltip)*, server-containern och BigQuery*(tooltip)* redan i drift. Arbetet bestod i att lägga till hostname-villkor och skapa produktens datasets – ingenting mer. En fraktion av vad det hade kostat att starta från noll.
 
 Namnkonventionen i BigQuery*(tooltip)* visade sig vara viktigare än vi förutsett. När man skriver queries mot `flocken_raw.events_*` och `nastahem_raw.events_*` behöver man aldrig undra vilket system data kommer från. Det minskar friktionen i analys och gör det möjligt att jämföra produkter i samma query.
 
@@ -69,4 +69,5 @@ På längre sikt är målet att `_marts`-lagret håller tillräckligt med data f
 - **GTM Server Container GTM-THB49L3K** – Server-side tagging*(tooltip: serverSideTagging)* på `gtm.nastahem.com`. Hanterar GA4*(tooltip)*-insamling och Consent Mode v2*(tooltip: ConsentMode)*.
 - **BigQuery*(tooltip)* `nastahem-tracking`** – Delat datalager med produktprefixade datasets i standardiserad raw/curated/marts-struktur.
 - **GA4*(tooltip)*** – En property per produkt med separata data streams för webb och app.
-- **Cursor / Claude Sonnet** – Designade arkitekturbeslutet, konfigurerade routing-logik och byggde dataset-strukturen.
+- **ChatGPT** – Utforskade arkitekturalternativ, validerade dataset-namngivning och identifierade regions-konflikten i Google Cloud.
+- **Cursor / Claude Sonnet** – Implementerade routing-logik, konfigurerade container-triggers och debuggade BigQuery*(tooltip)*-export.
