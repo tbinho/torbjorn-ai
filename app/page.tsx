@@ -9,18 +9,20 @@ export default function HomePage() {
         <div className="flex flex-col-reverse md:flex-row md:items-center md:gap-14">
           <div className="flex-1 mt-8 md:mt-0">
             <h1 className="mb-6">
-              AI förändrar hur arbete<br />
+              AI förändrar hur arbete
+              <br />
               kan utföras
             </h1>
             <p className="text-xl text-text-muted max-w-lg mb-8">
-              Jag dokumenterar hur jag praktiskt använder AI inom marknad, data,
-              automation och företagsbyggande. Inte teori – verkligt arbete.
+              Här beskriver jag hur jag praktiskt använder AI inom marknadsföring och företagsbyggande.
+              Det är inte teoretiska resonemang om vad AI kan göra, utan projekt jag faktiskt genomfört
+              tillsammans med AI.
             </p>
             <Link
               href="/arbete"
               className="inline-flex items-center bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent-hover transition-colors"
             >
-              Se mitt arbete
+              Läs om projekten
             </Link>
           </div>
           <div className="flex-shrink-0 flex justify-center md:justify-end">
@@ -38,17 +40,22 @@ export default function HomePage() {
 
       {/* Intro */}
       <section className="prose mb-20">
-        <h2>Om arbetet</h2>
+        <h2>Om mitt arbete med AI</h2>
         <p>
-          Under över ett år har AI i grunden förändrat hur jag utför mitt arbete
-          som marknadsförare. Det är inga färdiga modeller eller universella råd.
-          Det är dokumentation av verkligt arbete, under tidspress och med ansvar
-          för resultat.
+          AI har i grunden förändrat hur jag utför mitt arbete. Just nu förändras allt så snabbt
+          att det inte finns färdiga mallar att gå efter. Det handlar om att göra, testa och lära
+          sig av resultatet.
         </p>
         <p>
-          AI är inte ett verktyg att "lägga till". Det är nya tekniska
-          förutsättningar som förändrar hur själva arbetet kan utföras.
-          Begränsningarna har flyttats från systemen till människan.
+          AI är inte ytterligare ett verktyg eller en teknik. Det förändrar helt hur vi arbetar.
+          Den kanske största utmaningen är att hela tiden pusha sig att tänka utanför boxen, att
+          göra saker på nya sätt precis hela tiden. Jag skulle vilja säga att begränsningarna har
+          flyttats från systemen till människan.
+        </p>
+        <p>
+          På den här sajten beskriver jag hur jag skapar saker som jag tills nyligen inte ens hade
+          inom räckhåll inom olika områden genom att använda min nyfikenhet, som har blivit en
+          viktigare kompetens än tekniskt kunnande.
         </p>
       </section>
 
